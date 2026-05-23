@@ -1,12 +1,14 @@
 package com.developermind.focuslock.util
 
 import android.content.Context
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.developermind.focuslock.R
 
-data class LanguageOption(val tag: String, @StringRes val nameRes: Int)
+data class LanguageOption(
+    val tag: String,
+    val englishName: String,
+    val nativeName: String?,
+)
 
 class LocaleManager(context: Context) {
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -24,11 +26,11 @@ class LocaleManager(context: Context) {
         private const val KEY_LANGUAGE = "language"
 
         val supportedLanguages = listOf(
-            LanguageOption(SYSTEM_DEFAULT, R.string.lang_system_default),
-            LanguageOption("en", R.string.lang_english),
-            LanguageOption("es", R.string.lang_spanish),
-            LanguageOption("pt-BR", R.string.lang_portuguese_br),
-            LanguageOption("hi", R.string.lang_hindi),
+            LanguageOption(SYSTEM_DEFAULT, "System default", null),
+            LanguageOption("en",    "English",    null),
+            LanguageOption("es",    "Spanish",    "Español"),
+            LanguageOption("pt-BR", "Portuguese", "Português (Brasil)"),
+            LanguageOption("hi",    "Hindi",      "हिन्दी"),
         )
 
         fun applyLocale(languageTag: String) {
