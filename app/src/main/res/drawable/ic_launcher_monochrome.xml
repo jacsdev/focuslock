@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Monochrome variant for Android 13+ adaptive icon theming.
+    Same geometry as ic_launcher_foreground but all strokes/fills in #FFFFFF.
+    Android applies the user's theme color automatically over this layer.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- 90° gap arc -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M24,54 A30,30 0 0 1 54,24"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round"
+        android:strokeAlpha="0.35" />
+
+    <!-- 270° progress arc -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,24 A30,30 0 1 1 24,54"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round" />
+
+    <!-- Hour hand -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,54 L43.6,48"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Minute hand -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,54 L67.9,46"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Center pivot dot -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,51 a3,3 0 1 0 0.001,0 Z" />
+
+</vector>

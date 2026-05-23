@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FocusLock</string>
+
+    <!-- Admin screen -->
+    <string name="admin_subtitle_settings">Configuración</string>
+    <string name="section_permissions">Permisos</string>
+    <string name="section_theme_color">Color del tema</string>
+    <string name="section_language">Idioma</string>
+
+    <!-- Battery optimization permission -->
+    <string name="perm_battery_title">Optimización de batería</string>
+    <string name="perm_battery_desc">Desactiva la optimización de batería para que FocusLock permanezca activo en segundo plano.</string>
+    <string name="perm_battery_status_ok">Sin restricciones</string>
+    <string name="perm_battery_status_restricted">Restringido</string>
+    <string name="perm_battery_action_disable">Desactivar optimización</string>
+    <string name="perm_battery_action_change">Cambiar</string>
+
+    <!-- Notifications permission -->
+    <string name="perm_notifications_title">Notificaciones</string>
+    <string name="perm_notifications_desc">Necesario para mostrar la notificación persistente que mantiene el servicio activo.</string>
+    <string name="perm_notifications_status_enabled">Activadas</string>
+    <string name="perm_notifications_status_disabled">Desactivadas</string>
+    <string name="perm_notifications_action_enable">Activar</string>
+    <string name="perm_notifications_action_change">Cambiar</string>
+
+    <!-- Autostart permission -->
+    <string name="perm_autostart_title">Inicio automático</string>
+    <string name="perm_autostart_desc">Permite que FocusLock se inicie automáticamente tras el reinicio. Requerido en algunos fabricantes.</string>
+    <string name="perm_autostart_action">Abrir ajustes</string>
+
+    <!-- Themes -->
+    <string name="theme_dynamic">Dinámico</string>
+    <string name="theme_ocean">Océano</string>
+    <string name="theme_aurora">Aurora</string>
+    <string name="theme_arctic">Ártico</string>
+
+    <!-- Battery ring labels -->
+    <string name="battery_full">Completa</string>
+    <string name="battery_charging">Cargando</string>
+    <string name="battery_low">Batería baja</string>
+    <string name="battery_disconnected">Desconectado</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">FocusLock Monitor</string>
+    <string name="notification_service_active">FocusLock activo</string>
+
+    <!-- Languages -->
+    <string name="lang_system_default">Idioma del sistema</string>
+    <string name="lang_english">Inglés</string>
+    <string name="lang_spanish">Español</string>
+    <string name="lang_portuguese_br">Portugués (Brasil)</string>
+    <string name="lang_hindi">Hindi</string>
+</resources>
