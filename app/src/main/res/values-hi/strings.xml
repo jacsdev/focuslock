@@ -24,13 +24,14 @@
     <string name="perm_notifications_action_enable">सक्षम करें</string>
     <string name="perm_notifications_action_change">बदलें</string>
 
-    <!-- Full-screen intent permission (Android 14+) -->
-    <string name="perm_fullscreen_title">लॉक स्क्रीन ओवरले</string>
-    <string name="perm_fullscreen_desc">Android 14+ पर लॉक स्क्रीन के ऊपर FocusLock दिखाने के लिए आवश्यक। इसके बिना ओवरले नहीं दिखेगा।</string>
-    <string name="perm_fullscreen_status_ok">दी गई</string>
-    <string name="perm_fullscreen_status_restricted">नहीं दी गई</string>
-    <string name="perm_fullscreen_action_grant">अनुमति दें</string>
-    <string name="perm_fullscreen_action_change">बदलें</string>
+    <!-- Accessibility service permission -->
+    <string name="perm_accessibility_title">एक्सेसिबिलिटी सेवा</string>
+    <string name="perm_accessibility_desc">लॉक स्क्रीन पर FocusLock ओवरले दिखाने के लिए आवश्यक। एक्सेसिबिलिटी सेटिंग्स में FocusLock को सक्षम करें।</string>
+    <string name="perm_accessibility_status_ok">सक्षम</string>
+    <string name="perm_accessibility_status_restricted">अक्षम</string>
+    <string name="perm_accessibility_action_enable">सक्षम करें</string>
+    <string name="perm_accessibility_action_change">बदलें</string>
+    <string name="accessibility_service_description">कम दृष्टि वाले उपयोगकर्ताओं के लिए लॉक स्क्रीन पर समय और बैटरी दिखाता है।</string>
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">स्वत: प्रारंभ</string>

@@ -4,8 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,12 +29,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,11 +76,6 @@ fun AdminScreen(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { onRefresh() },
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,23 +83,30 @@ fun AdminScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp),
     ) {
-        Spacer(modifier = Modifier.height(56.dp))
+        Spacer(modifier = Modifier.height(52.dp))
 
-        Text(
-            text = stringResource(R.string.app_name),
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold,
-            color = TextPrimary,
-        )
-        Text(
-            text = stringResource(R.string.admin_subtitle_settings),
-            fontSize = 14.sp,
-            color = TextSecondary,
-        )
+        AppHeader()
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(36.dp))
         SectionHeader(stringResource(R.string.section_permissions))
         Spacer(modifier = Modifier.height(12.dp))
+
+        PermissionCard(
+            title = stringResource(R.string.perm_accessibility_title),
+            description = stringResource(R.string.perm_accessibility_desc),
+            isGranted = uiState.isAccessibilityServiceEnabled,
+            grantedLabel = stringResource(R.string.perm_accessibility_status_ok),
+            deniedLabel = stringResource(R.string.perm_accessibility_status_restricted),
+            actionLabel = if (uiState.isAccessibilityServiceEnabled)
+                stringResource(R.string.perm_accessibility_action_change)
+            else
+                stringResource(R.string.perm_accessibility_action_enable),
+            onAction = {
+                context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            },
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         PermissionCard(
             title = stringResource(R.string.perm_battery_title),
@@ -123,54 +131,6 @@ fun AdminScreen(
                 }
             },
         )
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        PermissionCard(
-            title = stringResource(R.string.perm_notifications_title),
-            description = stringResource(R.string.perm_notifications_desc),
-            isGranted = uiState.areNotificationsEnabled,
-            grantedLabel = stringResource(R.string.perm_notifications_status_enabled),
-            deniedLabel = stringResource(R.string.perm_notifications_status_disabled),
-            actionLabel = if (uiState.areNotificationsEnabled)
-                stringResource(R.string.perm_notifications_action_change)
-            else
-                stringResource(R.string.perm_notifications_action_enable),
-            onAction = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !uiState.areNotificationsEnabled) {
-                    notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-                } else {
-                    context.startActivity(
-                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                        }
-                    )
-                }
-            },
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            Spacer(modifier = Modifier.height(10.dp))
-            PermissionCard(
-                title = stringResource(R.string.perm_fullscreen_title),
-                description = stringResource(R.string.perm_fullscreen_desc),
-                isGranted = uiState.canUseFullScreenIntent,
-                grantedLabel = stringResource(R.string.perm_fullscreen_status_ok),
-                deniedLabel = stringResource(R.string.perm_fullscreen_status_restricted),
-                actionLabel = if (uiState.canUseFullScreenIntent)
-                    stringResource(R.string.perm_fullscreen_action_change)
-                else
-                    stringResource(R.string.perm_fullscreen_action_grant),
-                onAction = {
-                    context.startActivity(
-                        Intent(
-                            "android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENTS",
-                            Uri.parse("package:${context.packageName}"),
-                        )
-                    )
-                },
-            )
-        }
 
         Spacer(modifier = Modifier.height(10.dp))
 
@@ -208,6 +168,45 @@ fun AdminScreen(
         )
 
         Spacer(modifier = Modifier.height(40.dp))
+    }
+}
+
+@Composable
+private fun AppHeader() {
+    val context = LocalContext.current
+    val iconPainter = remember {
+        val drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher_round)!!
+        val size = 192
+        val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        drawable.setBounds(0, 0, size, size)
+        drawable.draw(Canvas(bmp))
+        BitmapPainter(bmp.asImageBitmap())
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Image(
+            painter = iconPainter,
+            contentDescription = null,
+            modifier = Modifier
+                .size(56.dp)
+                .clip(CircleShape),
+        )
+        Column {
+            Text(
+                text = stringResource(R.string.app_name),
+                fontSize = 26.sp,
+                fontWeight = FontWeight.Bold,
+                color = TextPrimary,
+            )
+            Text(
+                text = stringResource(R.string.admin_subtitle_settings),
+                fontSize = 13.sp,
+                color = TextSecondary,
+            )
+        }
     }
 }
 
@@ -449,7 +448,7 @@ private fun AdminScreenPreview() {
     AdminScreen(
         uiState = AdminUiState(
             isBatteryOptimizationIgnored = true,
-            areNotificationsEnabled = false,
+            isAccessibilityServiceEnabled = false,
             selectedTheme = AppTheme.OCEAN,
         ),
         onSetTheme = {},

@@ -24,13 +24,14 @@
     <string name="perm_notifications_action_enable">Ativar</string>
     <string name="perm_notifications_action_change">Alterar</string>
 
-    <!-- Full-screen intent permission (Android 14+) -->
-    <string name="perm_fullscreen_title">Sobreposição da tela de bloqueio</string>
-    <string name="perm_fullscreen_desc">Obrigatório no Android 14+ para exibir o FocusLock sobre a tela de bloqueio. Sem isso, a sobreposição não aparecerá.</string>
-    <string name="perm_fullscreen_status_ok">Concedida</string>
-    <string name="perm_fullscreen_status_restricted">Não concedida</string>
-    <string name="perm_fullscreen_action_grant">Conceder permissão</string>
-    <string name="perm_fullscreen_action_change">Alterar</string>
+    <!-- Accessibility service permission -->
+    <string name="perm_accessibility_title">Serviço de acessibilidade</string>
+    <string name="perm_accessibility_desc">Necessário para exibir o overlay do FocusLock na tela de bloqueio. Ative o FocusLock nas configurações de Acessibilidade.</string>
+    <string name="perm_accessibility_status_ok">Ativado</string>
+    <string name="perm_accessibility_status_restricted">Desativado</string>
+    <string name="perm_accessibility_action_enable">Ativar</string>
+    <string name="perm_accessibility_action_change">Alterar</string>
+    <string name="accessibility_service_description">Exibe hora e bateria na tela de bloqueio para usuários com baixa visão.</string>
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">Início automático</string>

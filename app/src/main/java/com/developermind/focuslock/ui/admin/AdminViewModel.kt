@@ -1,14 +1,12 @@
 package com.developermind.focuslock.ui.admin
 
 import android.app.Application
-import android.app.NotificationManager
-import android.os.Build
 import android.os.PowerManager
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.developermind.focuslock.data.model.AppTheme
 import com.developermind.focuslock.data.repository.ThemeRepository
+import com.developermind.focuslock.service.FocusLockAccessibilityService
 import com.developermind.focuslock.util.LocaleManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,18 +36,11 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     fun refreshPermissions() {
         val context = getApplication<Application>()
         val powerManager = context.getSystemService(PowerManager::class.java)
-        val notificationManager = context.getSystemService(NotificationManager::class.java)
         _uiState.update {
             it.copy(
                 isBatteryOptimizationIgnored = powerManager
                     .isIgnoringBatteryOptimizations(context.packageName),
-                areNotificationsEnabled = NotificationManagerCompat
-                    .from(context)
-                    .areNotificationsEnabled(),
-                canUseFullScreenIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-                    notificationManager.canUseFullScreenIntent()
-                else
-                    true,
+                isAccessibilityServiceEnabled = FocusLockAccessibilityService.isEnabled(context),
             )
         }
     }
