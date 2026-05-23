@@ -7,7 +7,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.PixelFormat
+import android.graphics.Rect
+import android.os.Build
 import android.provider.Settings
+import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import androidx.compose.runtime.mutableStateOf
@@ -93,9 +97,19 @@ class FocusLockAccessibilityService : AccessibilityService() {
         val keyguard = getSystemService(KeyguardManager::class.java)
         if (!keyguard.isKeyguardLocked) return
 
+        // Use real display bounds so OEM window managers (MIUI, One UI) can't
+        // shrink the overlay to the usable area by ignoring MATCH_PARENT.
+        val bounds: Rect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            windowManager.currentWindowMetrics.bounds
+        } else {
+            val dm = DisplayMetrics()
+            windowManager.defaultDisplay.getRealMetrics(dm)
+            Rect(0, 0, dm.widthPixels, dm.heightPixels)
+        }
+
         val params = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
+            bounds.width(),
+            bounds.height(),
             WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
@@ -103,7 +117,11 @@ class FocusLockAccessibilityService : AccessibilityService() {
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                 WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
             PixelFormat.TRANSLUCENT,
-        )
+        ).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = 0
+            y = 0
+        }
 
         try {
             windowManager.addView(overlayView, params)
