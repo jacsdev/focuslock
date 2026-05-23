@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FocusLock</string>
+
+    <!-- Admin screen -->
+    <string name="admin_subtitle_settings">सेटिंग्स</string>
+    <string name="section_permissions">अनुमतियाँ</string>
+    <string name="section_theme_color">रंग थीम</string>
+    <string name="section_language">भाषा</string>
+
+    <!-- Battery optimization permission -->
+    <string name="perm_battery_title">बैटरी अनुकूलन</string>
+    <string name="perm_battery_desc">FocusLock को पृष्ठभूमि में सक्रिय रखने के लिए बैटरी अनुकूलन बंद करें।</string>
+    <string name="perm_battery_status_ok">अप्रतिबंधित</string>
+    <string name="perm_battery_status_restricted">प्रतिबंधित</string>
+    <string name="perm_battery_action_disable">अनुकूलन बंद करें</string>
+    <string name="perm_battery_action_change">बदलें</string>
+
+    <!-- Notifications permission -->
+    <string name="perm_notifications_title">सूचनाएं</string>
+    <string name="perm_notifications_desc">सेवा को सक्रिय रखने वाली स्थायी सूचना दिखाने के लिए आवश्यक।</string>
+    <string name="perm_notifications_status_enabled">सक्षम</string>
+    <string name="perm_notifications_status_disabled">अक्षम</string>
+    <string name="perm_notifications_action_enable">सक्षम करें</string>
+    <string name="perm_notifications_action_change">बदलें</string>
+
+    <!-- Autostart permission -->
+    <string name="perm_autostart_title">स्वत: प्रारंभ</string>
+    <string name="perm_autostart_desc">रीबूट के बाद FocusLock को स्वचालित रूप से शुरू होने दें। कुछ निर्माताओं पर आवश्यक।</string>
+    <string name="perm_autostart_action">सेटिंग्स खोलें</string>
+
+    <!-- Themes -->
+    <string name="theme_dynamic">डायनामिक</string>
+    <string name="theme_ocean">महासागर</string>
+    <string name="theme_aurora">औरोरा</string>
+    <string name="theme_arctic">आर्कटिक</string>
+
+    <!-- Battery ring labels -->
+    <string name="battery_full">पूर्ण</string>
+    <string name="battery_charging">चार्ज हो रही है</string>
+    <string name="battery_low">कम बैटरी</string>
+    <string name="battery_disconnected">अनप्लग्ड</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">FocusLock मॉनिटर</string>
+    <string name="notification_service_active">FocusLock सक्रिय</string>
+
+    <!-- Languages -->
+    <string name="lang_system_default">सिस्टम डिफ़ॉल्ट</string>
+    <string name="lang_english">अंग्रेज़ी</string>
+    <string name="lang_spanish">स्पेनिश</string>
+    <string name="lang_portuguese_br">पुर्तगाली (ब्राज़ील)</string>
+    <string name="lang_hindi">हिन्दी</string>
+</resources>

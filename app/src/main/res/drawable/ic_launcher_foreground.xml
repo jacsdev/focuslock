@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Adaptive icon foreground layer — 108×108dp canvas.
+    Safe zone: 72×72dp centered (18,18 → 90,90). All visual content is within
+    this region so no clipping occurs regardless of the launcher's mask shape.
+
+    Design concept: the battery ring (270° green arc) identical to what users
+    see in the overlay, with clock hands inside at the classic 10:10 position.
+
+    Math reference (center = 54,54 ; ring radius = 30):
+      Top    (  0°) = (54, 24)
+      Right  ( 90°) = (84, 54)
+      Bottom (180°) = (54, 84)
+      Left   (270°) = (24, 54)
+
+    Green arc  : M54,24  A30,30 0 1 1 24,54  → 270° clockwise (top → right → bottom → left)
+    Gap arc    : M24,54  A30,30 0 0 1 54,24  →  90° clockwise (left → upper-left → top)
+    Hour  hand : 10 o'clock → end=(43.6, 48),  len=12dp
+    Minute hand:  2 o'clock → end=(67.9, 46),  len=16dp
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- ── Battery ring ─────────────────────────────────────────────────── -->
+
+    <!-- 90° gap track (top-left quadrant) — subtle dark arc so the gap
+         is visible on any launcher background, not just pure black. -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M24,54 A30,30 0 0 1 54,24"
+        android:strokeColor="#383838"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round" />
+
+    <!-- 270° progress arc — the signature green of FocusLock -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,24 A30,30 0 1 1 24,54"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="5.5"
+        android:strokeLineCap="round" />
+
+    <!-- ── Clock face ────────────────────────────────────────────────────── -->
+
+    <!-- Hour hand at 10 o'clock (300° from 12, length 12dp) -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,54 L43.6,48"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Minute hand at 2 o'clock (60° from 12, length 16dp) -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,54 L67.9,46"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Center pivot dot (radius 3dp) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,51 a3,3 0 1 0 0.001,0 Z" />
+
+</vector>
