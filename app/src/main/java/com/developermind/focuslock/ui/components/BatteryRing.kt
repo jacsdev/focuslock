@@ -117,8 +117,8 @@ private fun ChargingLabel(battery: BatteryState) {
         battery.isFull -> stringResource(R.string.battery_full)
         battery.isCharging -> stringResource(R.string.battery_charging)
         battery.isLow -> stringResource(R.string.battery_low)
-        else -> stringResource(R.string.battery_disconnected)
-    }
+        else -> null
+    } ?: return
 
     val alpha = if (battery.isCharging) {
         val transition = rememberInfiniteTransition(label = "chargingPulse")

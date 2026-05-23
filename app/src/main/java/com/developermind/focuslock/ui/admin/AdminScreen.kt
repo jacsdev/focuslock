@@ -379,16 +379,31 @@ private fun LanguageSelector(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(option.nameRes),
+                    text = option.englishName,
                     fontSize = 14.sp,
                     color = if (isSelected) TextPrimary else TextSecondary,
-                    fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+                    fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
+                    modifier = Modifier.weight(1f),
                 )
-                if (isSelected) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    if (option.nativeName != null) {
+                        Text(
+                            text = option.nativeName,
+                            fontSize = 13.sp,
+                            color = if (isSelected) Color(0xFF888888) else Color(0xFF555555),
+                            fontWeight = FontWeight.Normal,
+                        )
+                    }
                     Box(
                         modifier = Modifier
                             .size(8.dp)
-                            .background(ColorGranted, CircleShape)
+                            .background(
+                                color = if (isSelected) ColorGranted else Color.Transparent,
+                                shape = CircleShape,
+                            )
                     )
                 }
             }
