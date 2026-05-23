@@ -149,6 +149,29 @@ fun AdminScreen(
             },
         )
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Spacer(modifier = Modifier.height(10.dp))
+            PermissionCard(
+                title = stringResource(R.string.perm_fullscreen_title),
+                description = stringResource(R.string.perm_fullscreen_desc),
+                isGranted = uiState.canUseFullScreenIntent,
+                grantedLabel = stringResource(R.string.perm_fullscreen_status_ok),
+                deniedLabel = stringResource(R.string.perm_fullscreen_status_restricted),
+                actionLabel = if (uiState.canUseFullScreenIntent)
+                    stringResource(R.string.perm_fullscreen_action_change)
+                else
+                    stringResource(R.string.perm_fullscreen_action_grant),
+                onAction = {
+                    context.startActivity(
+                        Intent(
+                            "android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENTS",
+                            Uri.parse("package:${context.packageName}"),
+                        )
+                    )
+                },
+            )
+        }
+
         Spacer(modifier = Modifier.height(10.dp))
 
         InfoCard(
