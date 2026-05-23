@@ -24,13 +24,14 @@
     <string name="perm_notifications_action_enable">Enable</string>
     <string name="perm_notifications_action_change">Change</string>
 
-    <!-- Full-screen intent permission (Android 14+) -->
-    <string name="perm_fullscreen_title">Lock Screen Overlay</string>
-    <string name="perm_fullscreen_desc">Required on Android 14+ to display FocusLock above the lock screen. Without this, the overlay will not appear.</string>
-    <string name="perm_fullscreen_status_ok">Granted</string>
-    <string name="perm_fullscreen_status_restricted">Not granted</string>
-    <string name="perm_fullscreen_action_grant">Grant permission</string>
-    <string name="perm_fullscreen_action_change">Change</string>
+    <!-- Accessibility service permission -->
+    <string name="perm_accessibility_title">Accessibility Service</string>
+    <string name="perm_accessibility_desc">Required to display the FocusLock overlay on the lock screen. Enable FocusLock in Accessibility settings.</string>
+    <string name="perm_accessibility_status_ok">Enabled</string>
+    <string name="perm_accessibility_status_restricted">Disabled</string>
+    <string name="perm_accessibility_action_enable">Enable</string>
+    <string name="perm_accessibility_action_change">Change</string>
+    <string name="accessibility_service_description">Displays time and battery on the lock screen for users with low vision.</string>
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">Autostart</string>

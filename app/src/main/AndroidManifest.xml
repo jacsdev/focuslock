@@ -2,16 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Foreground service permissions -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- Required for API 34+ — specialUse is the correct type for a screen-monitor overlay -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
-    <!-- Required to show OverlayActivity as a full-screen intent on API 31+ -->
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <!-- Required to post the persistent service notification on API 33+ -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Required to restart ScreenMonitorService after device reboot -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Required to ignore battery optimizations so the accessibility service stays alive -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <application
         android:name=".FocusLockApplication"
@@ -25,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FocusLock">
 
-        <!-- Entry point — launches ScreenMonitorService and shows settings -->
+        <!-- Entry point — shows settings and guides the user to enable the accessibility service -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -37,42 +29,21 @@
             </intent-filter>
         </activity>
 
-        <!-- Fullscreen overlay shown on top of the lock screen.
-             singleTask: Android reuses the existing instance and calls onNewIntent — never
-             creates a second copy, so REORDER_TO_FRONT can bring it up without recreating it.
-             taskAffinity: own task, isolated from MainActivity's back stack.
-             excludeFromRecents: overlay must not appear in the recent-apps switcher. -->
-        <activity
-            android:name=".ui.overlay.OverlayActivity"
-            android:exported="false"
-            android:showWhenLocked="true"
-            android:turnScreenOn="true"
-            android:launchMode="singleTask"
-            android:taskAffinity="com.developermind.focuslock.overlay"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.FocusLock" />
-
-        <!-- Restarts ScreenMonitorService after device reboot.
-             ACTION_BOOT_COMPLETED IS on the implicit-broadcast exceptions list,
-             so it can be declared statically in the manifest. -->
-        <receiver
-            android:name=".receiver.BootReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Foreground service that registers ScreenReceiver at runtime.
-             foregroundServiceType="specialUse" is required on API 34+.
-             The <property> child is mandatory when using specialUse (Google Play review). -->
+        <!-- Accessibility service that draws the lock screen overlay via TYPE_ACCESSIBILITY_OVERLAY.
+             This type is placed above the keyguard without requiring SYSTEM_ALERT_WINDOW.
+             The service restarts automatically after reboot because Android preserves
+             accessibility settings across reboots. -->
         <service
-            android:name=".service.ScreenMonitorService"
-            android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Monitors screen on/off events to display battery and time overlay on lock screen for low-vision users" />
+            android:name=".service.FocusLockAccessibilityService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
         </service>
 
     </application>
