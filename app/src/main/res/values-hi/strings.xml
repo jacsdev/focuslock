@@ -24,6 +24,14 @@
     <string name="perm_notifications_action_enable">सक्षम करें</string>
     <string name="perm_notifications_action_change">बदलें</string>
 
+    <!-- Full-screen intent permission (Android 14+) -->
+    <string name="perm_fullscreen_title">लॉक स्क्रीन ओवरले</string>
+    <string name="perm_fullscreen_desc">Android 14+ पर लॉक स्क्रीन के ऊपर FocusLock दिखाने के लिए आवश्यक। इसके बिना ओवरले नहीं दिखेगा।</string>
+    <string name="perm_fullscreen_status_ok">दी गई</string>
+    <string name="perm_fullscreen_status_restricted">नहीं दी गई</string>
+    <string name="perm_fullscreen_action_grant">अनुमति दें</string>
+    <string name="perm_fullscreen_action_change">बदलें</string>
+
     <!-- Autostart permission -->
     <string name="perm_autostart_title">स्वत: प्रारंभ</string>
     <string name="perm_autostart_desc">रीबूट के बाद FocusLock को स्वचालित रूप से शुरू होने दें। कुछ निर्माताओं पर आवश्यक।</string>
@@ -43,6 +51,7 @@
 
     <!-- Notification -->
     <string name="notification_channel_name">FocusLock मॉनिटर</string>
+    <string name="notification_overlay_channel_name">लॉक स्क्रीन ओवरले</string>
     <string name="notification_service_active">FocusLock सक्रिय</string>
 
     <!-- Languages -->

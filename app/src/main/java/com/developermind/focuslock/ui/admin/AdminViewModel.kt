@@ -1,6 +1,8 @@
 package com.developermind.focuslock.ui.admin
 
 import android.app.Application
+import android.app.NotificationManager
+import android.os.Build
 import android.os.PowerManager
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
@@ -36,6 +38,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     fun refreshPermissions() {
         val context = getApplication<Application>()
         val powerManager = context.getSystemService(PowerManager::class.java)
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
         _uiState.update {
             it.copy(
                 isBatteryOptimizationIgnored = powerManager
@@ -43,6 +46,10 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
                 areNotificationsEnabled = NotificationManagerCompat
                     .from(context)
                     .areNotificationsEnabled(),
+                canUseFullScreenIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                    notificationManager.canUseFullScreenIntent()
+                else
+                    true,
             )
         }
     }
