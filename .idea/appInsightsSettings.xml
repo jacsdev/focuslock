@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.developermind.focuslock" />
+                  <option name="mobileSdkAppId" value="1:764029505586:android:aaf6022f11708a9ac4ac2b" />
+                  <option name="projectId" value="focus-lock-c73ac" />
+                  <option name="projectNumber" value="764029505586" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
