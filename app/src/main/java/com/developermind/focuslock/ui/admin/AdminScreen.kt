@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -220,13 +221,30 @@ fun AdminScreen(
             onLanguageSelected = onSetLanguage,
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(48.dp))
+        AppFooter()
+        Spacer(modifier = Modifier.height(28.dp))
     }
+}
+
+@Composable
+private fun AppFooter() {
+    Text(
+        text = "DeveloperMind Solutions",
+        fontSize = 11.sp,
+        color = Color(0xFF333333),
+        letterSpacing = 0.5.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Composable
 private fun AppHeader() {
     val context = LocalContext.current
+    val versionName = remember {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: ""
+    }
     val iconPainter = remember {
         val drawable = ContextCompat.getDrawable(context, R.mipmap.ic_launcher_round)!!
         val size = 192
@@ -259,6 +277,13 @@ private fun AppHeader() {
                 fontSize = 13.sp,
                 color = TextSecondary,
             )
+            if (versionName.isNotEmpty()) {
+                Text(
+                    text = "v$versionName",
+                    fontSize = 11.sp,
+                    color = Color(0xFF555555),
+                )
+            }
         }
     }
 }

@@ -20,6 +20,10 @@
     public <init>(android.content.Context, androidx.work.WorkerParameters);
 }
 
+# WorkManager uses Room internally — Room generates *_Impl classes via reflection
+-keep class * extends androidx.room.RoomDatabase { *; }
+-keep class androidx.work.impl.WorkDatabase_Impl { *; }
+
 # AccessibilityService — instantiated by the system
 -keep class * extends android.accessibilityservice.AccessibilityService
 
