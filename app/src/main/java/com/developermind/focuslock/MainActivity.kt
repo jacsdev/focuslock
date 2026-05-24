@@ -23,6 +23,12 @@ class MainActivity : AppCompatActivity() {
                     onSetTheme = viewModel::setTheme,
                     onSetLanguage = viewModel::setLanguage,
                     onRefresh = viewModel::refreshPermissions,
+                    onSetShowBattery = viewModel::setShowBattery,
+                    onSetShowTemperature = viewModel::setShowTemperature,
+                    onSetWeatherCity = viewModel::setWeatherCity,
+                    onClearWeatherCity = viewModel::clearWeatherCity,
+                    onRequestDeleteCity = viewModel::requestDeleteCity,
+                    onCancelDeleteCity = viewModel::cancelDeleteCity,
                 )
             }
         }

@@ -20,16 +20,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +50,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,6 +61,7 @@ import com.developermind.focuslock.R
 import com.developermind.focuslock.data.model.AppTheme
 import com.developermind.focuslock.util.LocaleManager
 import com.developermind.focuslock.util.LanguageOption
+import kotlin.math.roundToInt
 
 private val BackgroundColor = Color(0xFF0D0D0D)
 private val CardColor = Color(0xFF1A1A1A)
@@ -64,6 +76,12 @@ fun AdminScreen(
     onSetTheme: (AppTheme) -> Unit,
     onSetLanguage: (String) -> Unit,
     onRefresh: () -> Unit,
+    onSetShowBattery: (Boolean) -> Unit = {},
+    onSetShowTemperature: (Boolean) -> Unit = {},
+    onSetWeatherCity: (String) -> Unit = {},
+    onClearWeatherCity: () -> Unit = {},
+    onRequestDeleteCity: () -> Unit = {},
+    onCancelDeleteCity: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -80,6 +98,7 @@ fun AdminScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundColor)
+            .imePadding()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp),
     ) {
@@ -147,6 +166,40 @@ fun AdminScreen(
                 )
             },
         )
+
+        Spacer(modifier = Modifier.height(32.dp))
+        SectionHeader(stringResource(R.string.section_display))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        SwitchCard(
+            title = stringResource(R.string.pref_show_battery_title),
+            description = stringResource(R.string.pref_show_battery_desc),
+            checked = uiState.showBattery,
+            onCheckedChange = onSetShowBattery,
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        SwitchCard(
+            title = stringResource(R.string.pref_show_temperature_title),
+            description = stringResource(R.string.pref_show_temperature_desc),
+            checked = uiState.showTemperature,
+            onCheckedChange = onSetShowTemperature,
+        )
+
+        if (uiState.showTemperature) {
+            Spacer(modifier = Modifier.height(10.dp))
+            CityInputCard(
+                currentCity = uiState.weatherCity,
+                cityEditState = uiState.cityEditState,
+                cachedTemperature = uiState.cachedTemperature,
+                temperatureIsStale = uiState.temperatureIsStale,
+                onSave = onSetWeatherCity,
+                onDelete = onClearWeatherCity,
+                onRequestDelete = onRequestDeleteCity,
+                onCancelDelete = onCancelDeleteCity,
+            )
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
         SectionHeader(stringResource(R.string.section_theme_color))
@@ -248,6 +301,8 @@ private fun PermissionCard(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = TextPrimary,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f),
             )
             StatusChip(isGranted = isGranted, label = if (isGranted) grantedLabel else deniedLabel)
@@ -267,6 +322,7 @@ private fun PermissionCard(
                     color = if (isGranted) TextSecondary else Color(0xFF64B5F6),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
+                    maxLines = 1,
                 )
             }
         }
@@ -303,6 +359,7 @@ private fun InfoCard(title: String, description: String, actionLabel: String, on
                     color = TextSecondary,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
+                    maxLines = 1,
                 )
             }
         }
@@ -325,6 +382,275 @@ private fun StatusChip(isGranted: Boolean, label: String) {
             fontSize = 12.sp,
             color = if (isGranted) ColorGranted else ColorDenied,
         )
+    }
+}
+
+@Composable
+private fun SwitchCard(
+    title: String,
+    description: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardColor)
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = TextPrimary,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = description,
+                fontSize = 13.sp,
+                color = TextSecondary,
+                lineHeight = 18.sp,
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier.padding(start = 4.dp),
+        )
+    }
+}
+
+@Composable
+private fun CityInputCard(
+    currentCity: String,
+    cityEditState: CityEditState,
+    cachedTemperature: Float?,
+    temperatureIsStale: Boolean,
+    onSave: (String) -> Unit,
+    onDelete: () -> Unit,
+    onRequestDelete: () -> Unit,
+    onCancelDelete: () -> Unit,
+) {
+    var isEditing by rememberSaveable(currentCity) { mutableStateOf(currentCity.isBlank()) }
+    var localCity by rememberSaveable(currentCity) { mutableStateOf(currentCity) }
+
+    LaunchedEffect(cityEditState) {
+        if (cityEditState == CityEditState.Success) isEditing = false
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardColor)
+            .padding(16.dp),
+    ) {
+        if (currentCity.isNotBlank() && !isEditing) {
+            // ── View mode ────────────────────────────────────────────────────────
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Left: city name + temperature stacked vertically
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                ) {
+                    Text(
+                        text = currentCity,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextPrimary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    if (cachedTemperature != null) {
+                        Text(
+                            text = "${cachedTemperature.roundToInt()} °C",
+                            fontSize = 12.sp,
+                            color = if (temperatureIsStale) Color(0xFF555555) else TextSecondary,
+                            maxLines = 1,
+                        )
+                    }
+                }
+                // Right: action buttons
+                if (cityEditState == CityEditState.ConfirmDelete) {
+                    Row {
+                        TextButton(onClick = onCancelDelete) {
+                            Text(
+                                text = stringResource(R.string.city_action_cancel),
+                                color = TextSecondary,
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                            )
+                        }
+                        TextButton(onClick = onDelete) {
+                            Text(
+                                text = stringResource(R.string.city_action_confirm),
+                                color = Color(0xFFEF5350),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                } else {
+                    Row {
+                        TextButton(onClick = { isEditing = true }) {
+                            Text(
+                                text = stringResource(R.string.city_action_edit),
+                                color = TextSecondary,
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                            )
+                        }
+                        TextButton(onClick = onRequestDelete) {
+                            Text(
+                                text = stringResource(R.string.city_action_delete),
+                                color = Color(0xFFEF5350),
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (cityEditState == CityEditState.ConfirmDelete) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.city_delete_confirm),
+                    fontSize = 12.sp,
+                    color = Color(0xFFEF5350),
+                )
+            }
+
+            if (cityEditState == CityEditState.Success) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Text("✓", color = ColorGranted, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(R.string.city_saved),
+                        color = ColorGranted,
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                    )
+                }
+            }
+        } else {
+            // ── Edit / input mode ─────────────────────────────────────────────────
+            Spacer(modifier = Modifier.height(2.dp))
+            OutlinedTextField(
+                value = localCity,
+                onValueChange = { localCity = it },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                enabled = cityEditState != CityEditState.Saving,
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.pref_city_hint),
+                        color = TextSecondary,
+                        fontSize = 14.sp,
+                    )
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary,
+                    disabledTextColor = TextSecondary,
+                    focusedBorderColor = Color(0xFF64B5F6),
+                    unfocusedBorderColor = Color(0xFF444444),
+                    disabledBorderColor = Color(0xFF333333),
+                    cursorColor = Color(0xFF64B5F6),
+                ),
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                when (cityEditState) {
+                    CityEditState.Saving -> {
+                        if (currentCity.isNotBlank()) {
+                            TextButton(onClick = {}, enabled = false) {
+                                Text(
+                                    text = stringResource(R.string.city_action_cancel),
+                                    color = Color(0xFF444444),
+                                    fontSize = 13.sp,
+                                    maxLines = 1,
+                                )
+                            }
+                        }
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(20.dp)
+                                .align(Alignment.CenterVertically),
+                            strokeWidth = 2.dp,
+                            color = Color(0xFF64B5F6),
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
+                    CityEditState.Error -> {
+                        Text(
+                            text = stringResource(R.string.city_save_error),
+                            color = ColorDenied,
+                            fontSize = 13.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f),
+                        )
+                        TextButton(
+                            onClick = { onSave(localCity.trim()) },
+                            enabled = localCity.isNotBlank(),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.pref_city_save),
+                                color = Color(0xFF64B5F6),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                    else -> {
+                        if (currentCity.isNotBlank()) {
+                            TextButton(onClick = { isEditing = false; localCity = currentCity }) {
+                                Text(
+                                    text = stringResource(R.string.city_action_cancel),
+                                    color = TextSecondary,
+                                    fontSize = 13.sp,
+                                    maxLines = 1,
+                                )
+                            }
+                        }
+                        TextButton(
+                            onClick = { onSave(localCity.trim()) },
+                            enabled = localCity.isNotBlank(),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.pref_city_save),
+                                color = if (localCity.isNotBlank()) Color(0xFF64B5F6) else Color(0xFF555555),
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -374,6 +700,8 @@ private fun ThemeOption(theme: AppTheme, isSelected: Boolean, onClick: () -> Uni
             fontSize = 11.sp,
             color = if (isSelected) TextPrimary else TextSecondary,
             fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }
@@ -417,6 +745,8 @@ private fun LanguageSelector(
                             fontSize = 13.sp,
                             color = if (isSelected) Color(0xFF888888) else Color(0xFF555555),
                             fontWeight = FontWeight.Normal,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                     Box(

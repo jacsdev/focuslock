@@ -8,4 +8,10 @@ data class AdminUiState(
     val isAccessibilityServiceEnabled: Boolean = false,
     val selectedTheme: AppTheme = AppTheme.DYNAMIC,
     val selectedLanguageTag: String = LocaleManager.SYSTEM_DEFAULT,
+    val showBattery: Boolean = true,
+    val showTemperature: Boolean = false,
+    val weatherCity: String = "",
+    val cityEditState: CityEditState = CityEditState.Idle,
+    val cachedTemperature: Float? = null,
+    val temperatureIsStale: Boolean = false,
 )

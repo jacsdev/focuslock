@@ -5,9 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.developermind.focuslock.data.model.BatteryState
 import com.developermind.focuslock.ui.components.BatteryRing
+import com.developermind.focuslock.ui.components.TemperatureDisplay
 import com.developermind.focuslock.ui.components.TimeDisplay
 
 @Composable
@@ -31,11 +30,19 @@ fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit) {
                 onClick = onDismiss,
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(48.dp, Alignment.CenterVertically),
     ) {
         TimeDisplay(time = uiState.time, date = uiState.date)
-        Spacer(modifier = Modifier.height(48.dp))
-        BatteryRing(battery = uiState.battery, theme = uiState.theme)
+        if (uiState.showBattery) {
+            BatteryRing(battery = uiState.battery, theme = uiState.theme)
+        }
+        if (uiState.showTemperature) {
+            TemperatureDisplay(
+                city = uiState.weatherCity,
+                temperature = uiState.temperature,
+                isStale = uiState.temperatureIsStale,
+            )
+        }
     }
 }
 

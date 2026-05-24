@@ -5,6 +5,13 @@
     <!-- Admin screen -->
     <string name="admin_subtitle_settings">सेटिंग्स</string>
     <string name="section_permissions">अनुमतियाँ</string>
+    <string name="section_display">डिस्प्ले</string>
+    <string name="pref_show_battery_title">बैटरी रिंग दिखा��ं</string>
+    <string name="pref_show_battery_desc">लॉक स्क्र��न पर बैटरी संकेतक प्रदर्शित करें।</string>
+    <string name="pref_show_temperature_title">तापमान दिखाएं</string>
+    <string name="pref_show_temperature_desc">लॉक स्क्र��न पर तापमा�� संकेतक प्र��र्शित करें।</string>
+    <string name="pref_city_hint">शहर या क्षेत्र</string>
+    <string name="pref_city_save">सहेजें</string>
     <string name="section_theme_color">रंग थीम</string>
     <string name="section_language">भाषा</string>
 
@@ -54,6 +61,15 @@
     <string name="notification_channel_name">FocusLock मॉनिटर</string>
     <string name="notification_overlay_channel_name">लॉक स्क्रीन ओवरले</string>
     <string name="notification_service_active">FocusLock सक्रिय</string>
+
+    <!-- City CRUD feedback -->
+    <string name="city_saved">शहर सहेजा</string>
+    <string name="city_save_error">सहेजने में त्रुटि</string>
+    <string name="city_action_edit">संपादित करें</string>
+    <string name="city_action_delete">हटाएं</string>
+    <string name="city_delete_confirm">शहर हटाएं?</string>
+    <string name="city_action_confirm">पुष्टि करें</string>
+    <string name="city_action_cancel">रद्द करें</string>
 
     <!-- Languages -->
     <string name="lang_system_default">सिस्टम डिफ़ॉल्ट</string>

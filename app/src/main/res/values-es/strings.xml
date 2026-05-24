@@ -5,6 +5,13 @@
     <!-- Admin screen -->
     <string name="admin_subtitle_settings">Configuración</string>
     <string name="section_permissions">Permisos</string>
+    <string name="section_display">Pantalla</string>
+    <string name="pref_show_battery_title">Mostrar anillo de batería</string>
+    <string name="pref_show_battery_desc">Muestra el indicador de batería en la pantalla de bloqueo.</string>
+    <string name="pref_show_temperature_title">Mostrar temperatura</string>
+    <string name="pref_show_temperature_desc">Muestra un indicador de temperatura en la pantalla de bloqueo.</string>
+    <string name="pref_city_hint">Ciudad o región</string>
+    <string name="pref_city_save">Guardar</string>
     <string name="section_theme_color">Color del tema</string>
     <string name="section_language">Idioma</string>
 
@@ -54,6 +61,15 @@
     <string name="notification_channel_name">FocusLock Monitor</string>
     <string name="notification_overlay_channel_name">Overlay de pantalla de bloqueo</string>
     <string name="notification_service_active">FocusLock activo</string>
+
+    <!-- City CRUD feedback -->
+    <string name="city_saved">Ciudad guardada</string>
+    <string name="city_save_error">Error al guardar</string>
+    <string name="city_action_edit">Editar</string>
+    <string name="city_action_delete">Eliminar</string>
+    <string name="city_delete_confirm">¿Eliminar ciudad?</string>
+    <string name="city_action_confirm">Confirmar</string>
+    <string name="city_action_cancel">Cancelar</string>
 
     <!-- Languages -->
     <string name="lang_system_default">Idioma del sistema</string>

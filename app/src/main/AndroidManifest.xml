@@ -4,6 +4,8 @@
 
     <!-- Required to ignore battery optimizations so the accessibility service stays alive -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- Required for Open-Meteo weather API calls -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".FocusLockApplication"
@@ -22,7 +24,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FocusLock">
+            android:theme="@style/Theme.FocusLock"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

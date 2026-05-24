@@ -20,7 +20,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.developermind.focuslock.data.repository.BatteryRepository
+import com.developermind.focuslock.data.repository.PreferencesRepository
 import com.developermind.focuslock.data.repository.ThemeRepository
+import com.developermind.focuslock.data.repository.WeatherRepository
 import com.developermind.focuslock.receiver.ScreenReceiver
 import com.developermind.focuslock.ui.overlay.OverlayScreen
 import com.developermind.focuslock.ui.overlay.OverlayUiState
@@ -52,6 +54,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     private val batteryRepository by lazy { BatteryRepository(this) }
     private val themeRepository by lazy { ThemeRepository(this) }
+    private val preferencesRepository by lazy { PreferencesRepository(this) }
+    private val weatherRepository by lazy { WeatherRepository(this) }
     private var screenReceiver: ScreenReceiver? = null
 
     override fun onServiceConnected() {
@@ -60,6 +64,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
         setupOverlayView()
         observeBattery()
         observeTheme()
+        observePreferences()
+        observeTemperature()
         registerScreenReceiver()
     }
 
@@ -197,6 +203,29 @@ class FocusLockAccessibilityService : AccessibilityService() {
         serviceScope.launch {
             themeRepository.observeTheme().collect { theme ->
                 uiState.value = uiState.value.copy(theme = theme)
+            }
+        }
+    }
+
+    private fun observePreferences() {
+        serviceScope.launch {
+            preferencesRepository.observePreferences().collect { prefs ->
+                uiState.value = uiState.value.copy(
+                    showBattery = prefs.showBattery,
+                    showTemperature = prefs.showTemperature,
+                    weatherCity = prefs.weatherCity,
+                )
+            }
+        }
+    }
+
+    private fun observeTemperature() {
+        serviceScope.launch {
+            weatherRepository.observeTemperature().collect { result ->
+                uiState.value = uiState.value.copy(
+                    temperature = result?.temperature,
+                    temperatureIsStale = result?.isStale ?: false,
+                )
             }
         }
     }
