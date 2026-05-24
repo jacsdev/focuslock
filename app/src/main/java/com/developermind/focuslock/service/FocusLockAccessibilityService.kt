@@ -11,6 +11,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
@@ -43,7 +44,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
     private lateinit var windowManager: WindowManager
     private var overlayView: ComposeView? = null
     private val lifecycleOwner = ServiceLifecycleOwner()
-    private var isOverlayShowing = false
+    private var isOverlayAttached = false
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var timeJob: Job? = null
@@ -51,7 +52,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     private val batteryRepository by lazy { BatteryRepository(this) }
     private val themeRepository by lazy { ThemeRepository(this) }
-    private lateinit var screenReceiver: ScreenReceiver
+    private var screenReceiver: ScreenReceiver? = null
 
     override fun onServiceConnected() {
         windowManager = getSystemService(WindowManager::class.java)
@@ -68,10 +69,14 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        hideOverlay()
+        safeRemoveOverlay()
         lifecycleOwner.onDestroy()
         serviceScope.cancel()
-        try { unregisterReceiver(screenReceiver) } catch (_: Exception) {}
+        screenReceiver?.let {
+            try { unregisterReceiver(it) } catch (e: Exception) {
+                Log.e(TAG, "Error al desregistrar ScreenReceiver: ${e.message}")
+            }
+        }
     }
 
     // ── Overlay ───────────────────────────────────────────────────────────────
@@ -84,7 +89,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
                 FocusLockTheme {
                     OverlayScreen(
                         uiState = uiState.value,
-                        onDismiss = ::hideOverlay,
+                        onDismiss = ::safeRemoveOverlay,
                     )
                 }
             }
@@ -92,8 +97,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
     }
 
     @Suppress("DEPRECATION")
-    private fun showOverlay() {
-        if (isOverlayShowing) return
+    private fun safeAddOverlay() {
+        if (isOverlayAttached) return
         val keyguard = getSystemService(KeyguardManager::class.java)
         if (!keyguard.isKeyguardLocked) return
 
@@ -125,22 +130,39 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
         try {
             windowManager.addView(overlayView, params)
+            isOverlayAttached = true
             lifecycleOwner.onStart()
             lifecycleOwner.onResume()
-            isOverlayShowing = true
             startTimeTicker()
-        } catch (_: Exception) {}
+        } catch (e: WindowManager.BadTokenException) {
+            Log.e(TAG, "BadToken al añadir overlay: ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            // View was already attached — sync the flag to reflect the real state.
+            Log.e(TAG, "Vista ya adjunta al WindowManager: ${e.message}")
+            isOverlayAttached = true
+        } catch (e: Exception) {
+            Log.e(TAG, "Error inesperado en addView: ${e.message}")
+        }
     }
 
-    private fun hideOverlay() {
-        if (!isOverlayShowing) return
+    private fun safeRemoveOverlay() {
+        if (!isOverlayAttached) return
+        stopTimeTicker()
         try {
-            stopTimeTicker()
             lifecycleOwner.onPause()
             lifecycleOwner.onStop()
-            windowManager.removeView(overlayView)
-            isOverlayShowing = false
-        } catch (_: Exception) {}
+        } catch (e: Exception) {
+            Log.e(TAG, "Error en lifecycle al ocultar overlay: ${e.message}")
+        }
+        try {
+            windowManager.removeViewImmediate(overlayView)
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Vista no registrada en WindowManager: ${e.message}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error inesperado en removeView: ${e.message}")
+        } finally {
+            isOverlayAttached = false
+        }
     }
 
     // ── State ─────────────────────────────────────────────────────────────────
@@ -183,9 +205,9 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     private fun registerScreenReceiver() {
         screenReceiver = ScreenReceiver(
-            onScreenOn = { showOverlay() },
+            onScreenOn = { safeAddOverlay() },
             onScreenOff = {},
-            onUserPresent = { hideOverlay() },
+            onUserPresent = { safeRemoveOverlay() },
         )
         val filter = IntentFilter().apply {
             addAction(Intent.ACTION_SCREEN_ON)
@@ -198,6 +220,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     companion object {
+        private const val TAG = "FocusLockA11y"
         private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
         fun currentTime(): String = LocalTime.now().format(timeFormatter)
