@@ -45,7 +45,7 @@ private fun OverlayScreenPreview() {
     OverlayScreen(
         uiState = OverlayUiState(
             time = "22:45",
-            date = "viernes, 23 de mayo",
+            date = "viernes, 25 de mayo",
             battery = BatteryState(percentage = 72, isCharging = false),
         ),
         onDismiss = {},
