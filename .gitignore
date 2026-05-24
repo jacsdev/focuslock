@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# AI assistant context files — local only, never committed
+CLAUDE.md
+AGENTS.md
+docs/project.md
