@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_engram_engram__mem_search",
+      "Bash(./gradlew :app:compileDebugKotlin)",
+      "mcp__plugin_engram_engram__mem_save"
+    ]
+  }
+}

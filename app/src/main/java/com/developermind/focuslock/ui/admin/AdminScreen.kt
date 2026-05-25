@@ -231,8 +231,8 @@ fun AdminScreen(
 private fun AppFooter() {
     Text(
         text = "DeveloperMind Solutions",
-        fontSize = 11.sp,
-        color = Color(0xFF333333),
+        fontSize = 12.sp,
+        color = Color.White,
         letterSpacing = 0.5.sp,
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth(),

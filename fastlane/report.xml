@@ -5,32 +5,32 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000197">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.00024">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: Switch to android build lane" time="7.6e-05">
+      <testcase classname="fastlane.lanes" name="1: Switch to android build lane" time="7.9e-05">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: grep -o &apos;versionCode = [0-9]*&apos; &apos;/Users/jacsdev/AndroidStudioProjects/FocusLock/app/build.gradle.kts&apos; | grep -o &apos;[0-9]*&apos;" time="0.010949">
+      <testcase classname="fastlane.lanes" name="2: grep -o &apos;versionCode = [0-9]*&apos; &apos;/Users/jacsdev/AndroidStudioProjects/FocusLock/app/build.gradle.kts&apos; | grep -o &apos;[0-9]*&apos;" time="0.01245">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode = 9/versionCode = 10/&apos; &apos;/Users/jacsdev/AndroidStudioProjects/FocusLock/app/build.gradle.kts&apos;" time="0.009001">
+      <testcase classname="fastlane.lanes" name="3: sed -i &apos;&apos; &apos;s/versionCode = 11/versionCode = 12/&apos; &apos;/Users/jacsdev/AndroidStudioProjects/FocusLock/app/build.gradle.kts&apos;" time="0.010394">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: bundleRelease" time="32.460776">
+      <testcase classname="fastlane.lanes" name="4: bundleRelease" time="53.527399">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: upload_to_play_store" time="29.158745">
+      <testcase classname="fastlane.lanes" name="5: upload_to_play_store" time="32.057594">
         
       </testcase>
     

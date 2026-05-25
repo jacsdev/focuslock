@@ -2,10 +2,14 @@ package com.developermind.focuslock.service
 
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
+import android.app.Notification
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
@@ -17,8 +21,12 @@ import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import com.developermind.focuslock.FocusLockApplication
+import com.developermind.focuslock.MainActivity
+import com.developermind.focuslock.R
 import com.developermind.focuslock.data.repository.BatteryRepository
 import com.developermind.focuslock.data.repository.PreferencesRepository
 import com.developermind.focuslock.data.repository.ThemeRepository
@@ -60,6 +68,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     override fun onServiceConnected() {
         windowManager = getSystemService(WindowManager::class.java)
+        startForegroundCompat()
         lifecycleOwner.onCreate()
         setupOverlayView()
         observeBattery()
@@ -75,6 +84,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        stopForeground(STOP_FOREGROUND_REMOVE)
         safeRemoveOverlay()
         lifecycleOwner.onDestroy()
         serviceScope.cancel()
@@ -82,6 +92,29 @@ class FocusLockAccessibilityService : AccessibilityService() {
             try { unregisterReceiver(it) } catch (e: Exception) {
                 Log.e(TAG, "Error al desregistrar ScreenReceiver: ${e.message}")
             }
+        }
+    }
+
+    // ── Foreground promotion ──────────────────────────────────────────────────
+
+    private fun startForegroundCompat() {
+        val tapIntent = PendingIntent.getActivity(
+            this, 0,
+            Intent(this, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+        val notification = NotificationCompat.Builder(this, FocusLockApplication.CHANNEL_ID)
+            .setContentTitle(getString(R.string.notification_service_active))
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentIntent(tapIntent)
+            .setOngoing(true)
+            .setSilent(true)
+            .build()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+        } else {
+            startForeground(NOTIFICATION_ID, notification)
         }
     }
 
@@ -250,6 +283,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     companion object {
         private const val TAG = "FocusLockA11y"
+        private const val NOTIFICATION_ID = 1
         private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
         fun currentTime(): String = LocalTime.now().format(timeFormatter)

@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <!-- Required for Open-Meteo weather API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required to promote the accessibility service to foreground so Android won't kill it -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- Required on Android 13+ to post the persistent "service active" notification -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".FocusLockApplication"
@@ -40,6 +45,7 @@
             android:name=".service.FocusLockAccessibilityService"
             android:exported="true"
             android:label="@string/app_name"
+            android:foregroundServiceType="dataSync"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
