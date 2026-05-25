@@ -1,38 +1,94 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 default_platform(:android)
 
+PROJECT_ROOT = File.expand_path("..", __dir__)
+BUILD_GRADLE = File.join(PROJECT_ROOT, "app/build.gradle.kts")
+
+def bump_version_code
+  current = sh("grep -o 'versionCode = [0-9]*' '#{BUILD_GRADLE}' | grep -o '[0-9]*'").strip.to_i
+  next_code = current + 1
+  sh("sed -i '' 's/versionCode = #{current}/versionCode = #{next_code}/' '#{BUILD_GRADLE}'")
+  UI.success("versionCode: #{current} → #{next_code}")
+  next_code
+end
+
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
+
+  desc "Build release AAB (incrementa versionCode automáticamente)"
+  lane :build do
+    new_code = bump_version_code
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      project_dir: PROJECT_ROOT,
+    )
+    new_code
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
+  desc "Build local + copia el AAB a ~/Downloads (sin subir a Play Store)"
+  lane :local do
+    new_code = build
+    timestamp = Time.now.strftime("%Y%m%d_%H%M")
+    src = File.join(PROJECT_ROOT, "app/build/outputs/bundle/release/app-release.aab")
+    dest = File.expand_path("~/Downloads/focuslock-release-v#{new_code}-#{timestamp}.aab")
+    sh("cp '#{src}' '#{dest}'")
+    UI.success("Bundle copiado: #{dest}")
+  end
+
+  desc "Build + subir a Internal Testing"
+  lane :internal do
+    build
+    upload_to_play_store(
+      track: "internal",
+      aab: File.join(PROJECT_ROOT, "app/build/outputs/bundle/release/app-release.aab"),
+      release_status: "draft",
+      skip_upload_apk: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+
+  desc "Promover Internal → Alpha"
+  lane :alpha do
+    upload_to_play_store(
+      track: "internal",
+      track_promote_to: "alpha",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+
+  desc "Promover Alpha → Beta"
   lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+    upload_to_play_store(
+      track: "alpha",
+      track_promote_to: "beta",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
   end
 
-  desc "Deploy a new version to the Google Play"
+  desc "Promover Beta → Production"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    upload_to_play_store(
+      track: "beta",
+      track_promote_to: "production",
+      skip_upload_apk: true,
+      skip_upload_aab: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
   end
+
 end
