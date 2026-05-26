@@ -268,7 +268,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
     private fun registerScreenReceiver() {
         screenReceiver = ScreenReceiver(
             onScreenOn = { safeAddOverlay() },
-            onScreenOff = {},
+            onScreenOff = { safeRemoveOverlay() },
             onUserPresent = { safeRemoveOverlay() },
         )
         val filter = IntentFilter().apply {
