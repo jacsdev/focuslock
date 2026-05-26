@@ -1,113 +1,270 @@
 # FocusLock
 
-**FocusLock** is a free, open-source Android accessibility app that overlays a large-text clock, date, battery indicator, and optional temperature on top of the system lock screen — designed for people with low vision who need maximum readability at a glance.
+**FocusLock** is a free and open-source Android accessibility app designed for people with low vision who need larger, clearer information on their device screen.
+
+When the device screen turns on, FocusLock displays a simplified, high-contrast interface with large text showing the current time, date, battery level, and optional weather information — making essential information easier to read at a glance.
+
+FocusLock is built specifically for accessibility, simplicity, readability, and minimal visual clutter.
 
 ---
 
-## The Problem
+# Why FocusLock Exists
 
-The default Android lock screen is built for average vision. Its clock and status elements are small, low-contrast, and often buried under wallpapers or notification clutter. For users with low vision, glancing at a locked phone to check the time or battery level can be a genuinely frustrating experience.
+Modern Android interfaces are designed for average vision and dense information layouts. For many people — especially older adults and users with visual impairments — checking the time or battery level on a locked device can be frustrating due to:
 
-Commercial solutions either require replacing the entire launcher (overkill), demand system-level permissions that create security risks, or are cluttered with ads and unnecessary features.
+* Small text
+* Low contrast
+* Busy wallpapers
+* Notification clutter
+* Complex lock screen layouts
 
-FocusLock takes a different approach: it does one thing, does it well, and stays out of the way.
+FocusLock solves this by providing a clean, enlarged accessibility display focused only on essential information.
 
----
+The goal is simple:
 
-## What It Does
-
-When your screen turns on and the device is locked, FocusLock draws a full-screen overlay showing:
-
-- **Time** — displayed in 88–110sp bold white text, impossible to miss
-- **Date** — full localized date below the clock
-- **Battery ring** — a circular indicator that changes color based on level (green > 50%, yellow 20–50%, red < 20%), with percentage text in the center
-- **Temperature** — optional real-time temperature from Open-Meteo for your city (no API key required)
-
-When you unlock your device (swipe, PIN, fingerprint), the overlay disappears immediately. FocusLock never blocks access to your phone — it only adds information on top of the existing lock screen.
+> Make Android devices easier to read for people who struggle with small interfaces.
 
 ---
 
-## How It Works
+# Features
 
-FocusLock uses Android's `AccessibilityService` to draw a `TYPE_ACCESSIBILITY_OVERLAY` window — a window type that sits above the keyguard without requiring `SYSTEM_ALERT_WINDOW` permission and without root access. This is the same mechanism used by screen readers and other accessibility tools that Android officially supports.
+## Large Text Display
 
-The overlay appears on `ACTION_SCREEN_ON` and is removed on `ACTION_USER_PRESENT` (device unlocked). Because Android preserves accessibility service settings across reboots, FocusLock resumes automatically after a device restart — no extra boot permission needed.
+FocusLock shows an oversized digital clock optimized for readability and visibility from a distance.
 
-Temperature data is fetched via [Open-Meteo](https://open-meteo.com/), a free, no-key-required weather API, and refreshed in the background every 30 minutes using WorkManager.
-
----
-
-## Features
-
-- Pure AMOLED black background (`#000000`) for maximum contrast and battery efficiency on OLED screens
-- 4 color themes: Dynamic, Ocean, Aurora, Arctic
-- 4 interface languages: English, Spanish, Portuguese (Brazil), Hindi
-- Optional temperature display with city configuration
-- Optional battery percentage display
-- Battery ring with color-coded levels and charging indicator
-- Stale data detection — temperature shown in gray when last update was more than 2 hours ago
-- No root required
-- No `SYSTEM_ALERT_WINDOW` permission required
-- No ads, no tracking, no internet permission beyond weather fetching
+* Large bold typography
+* High contrast colors
+* AMOLED-friendly pure black background
+* Minimal distractions
 
 ---
 
-## Technical Stack
+## Date & Time
 
-| Layer | Technology |
-|---|---|
-| Language | Kotlin |
-| UI | Jetpack Compose + Material 3 |
-| Architecture | MVVM + Unidirectional Data Flow (UDF) |
-| Persistence | DataStore Preferences |
-| Background work | WorkManager |
-| Overlay mechanism | `AccessibilityService` + `TYPE_ACCESSIBILITY_OVERLAY` |
-| Weather API | Open-Meteo (free, no API key) |
-| Min SDK | 26 (Android 8.0) |
-| Target SDK | 36 |
+Displays:
+
+* Current time
+* Full localized date
+* Automatic 12h / 24h formatting based on device settings
 
 ---
 
-## Build & Install
+## Battery Indicator
+
+FocusLock includes a circular battery indicator with:
+
+* Percentage display
+* Charging state indicator
+* Color-coded battery levels
+
+Battery colors:
+
+* Green → healthy battery
+* Yellow → medium battery
+* Red → low battery
+
+---
+
+## Optional Weather
+
+Users can optionally enable weather information using a manually entered city name.
+
+Weather features:
+
+* Current temperature
+* Automatic refresh
+* No API key required
+* No location permission required
+
+Weather data is provided by [Open-Meteo](https://open-meteo.com).
+
+---
+
+## Accessibility-Focused Design
+
+FocusLock is designed specifically for:
+
+* Low-vision users
+* Older adults
+* Users sensitive to visual clutter
+* Users who need larger readability
+
+The app uses Android Accessibility APIs exclusively to provide enlarged visual information.
+
+FocusLock does **not**:
+
+* read screen content
+* capture typed text
+* monitor other apps
+* track user activity
+* perform automated actions
+* collect accessibility data
+* modify system settings
+
+All processing happens locally on the device.
+
+---
+
+# Privacy First
+
+FocusLock was intentionally designed to be privacy-friendly.
+
+The app:
+
+* contains no ads
+* does not sell user data
+* does not create user profiles
+* stores preferences locally on the device
+
+Optional crash reports and anonymous analytics may be processed through Firebase to improve stability and usability.
+
+See the full Privacy Policy for details.
+
+---
+
+# Technical Overview
+
+| Component               | Technology           |
+| ----------------------- | -------------------- |
+| Language                | Kotlin               |
+| UI                      | Jetpack Compose      |
+| Architecture            | MVVM + UDF           |
+| Persistence             | Android DataStore    |
+| Background Tasks        | WorkManager          |
+| Accessibility Layer     | AccessibilityService |
+| Weather API             | Open-Meteo           |
+| Minimum Android Version | Android 8.0 (API 26) |
+| Target SDK              | Android 16 / API 36  |
+
+---
+
+# Permissions
+
+| Permission                             | Purpose                                                 |
+| -------------------------------------- | ------------------------------------------------------- |
+| `BIND_ACCESSIBILITY_SERVICE`           | Required for accessibility functionality                |
+| `INTERNET`                             | Fetch optional weather information                      |
+| `ACCESS_NETWORK_STATE`                 | Check connectivity before weather updates               |
+| `FOREGROUND_SERVICE`                   | Maintain accessibility-related background functionality |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Improve service reliability on some devices             |
+
+FocusLock does not request:
+
+* location permission
+* contacts access
+* storage access
+* SMS access
+* microphone access
+
+---
+
+# How It Works
+
+When the device screen becomes active, FocusLock displays an enlarged accessibility interface with essential information.
+
+When the device is unlocked, the interface disappears automatically.
+
+FocusLock is designed to be passive and non-intrusive:
+
+* it never blocks device access
+* it never replaces system security
+* it never intercepts user input
+
+---
+
+# Installation
+
+## Clone Repository
 
 ```bash
-# Clone the repository
 git clone https://github.com/yourusername/FocusLock.git
 cd FocusLock
+```
 
-# Build debug APK
+---
+
+## Build Debug APK
+
+```bash
 ./gradlew assembleDebug
+```
 
-# Install on connected device
+---
+
+## Install on Device
+
+```bash
 ./gradlew installDebug
 ```
 
-After installing, open the app and follow the on-screen steps to enable the FocusLock accessibility service. That's all the setup required.
+---
+
+# Setup
+
+After installation:
+
+1. Open FocusLock
+2. Follow the accessibility setup instructions
+3. Enable the FocusLock accessibility service
+4. Configure optional weather and theme preferences
+
+Once enabled, FocusLock will automatically display the accessibility interface when the device screen turns on.
 
 ---
 
-## Permissions
+# Localization
 
-| Permission | Why |
-|---|---|
-| `BIND_ACCESSIBILITY_SERVICE` | Required to draw the lock screen overlay via the accessibility API |
-| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Keeps the accessibility service alive so the overlay appears reliably |
-| `INTERNET` | Fetches temperature data from Open-Meteo (only when weather is enabled) |
+Currently supported languages:
 
-No location permission is required — city name is entered manually by the user.
-
----
-
-## Open Source & Community
-
-FocusLock is released as a free, open-source contribution to the Android accessibility community.
-
-The patterns used here — drawing above the keyguard via `AccessibilityService`, real-time UI updates from a `CoroutineWorker`, and Jetpack Compose inside a Service — are not widely documented together. If you're building an accessibility tool, a low-vision aid, an always-on display, or any app that needs to interact with the lock screen without root or system permissions, this project is meant to be a reference you can learn from and build on.
-
-Take it, adapt it, and use it to build things that help people.
+* English
+* Español
+* Português (Brasil)
+* हिन्दी
 
 ---
 
-## License
+# Themes
 
-[MIT](LICENSE)
+Available themes:
+
+* Dynamic
+* Ocean
+* Aurora
+* Arctic
+
+All themes are optimized for:
+
+* high contrast
+* readability
+* OLED battery efficiency
+
+---
+
+# Open Source
+
+FocusLock is fully open source and intended to support the Android accessibility community.
+
+The project demonstrates:
+
+* accessibility-focused UI patterns
+* Jetpack Compose inside accessibility components
+* large-text accessibility design
+* lightweight background updates
+* privacy-first Android architecture
+
+Contributions, improvements, and accessibility feedback are welcome.
+
+---
+
+# License
+
+MIT License
+
+---
+
+# Contact
+
+Developer: **jacsdev**
+Email: **[jacsdev@gmail.com](mailto:jacsdev@gmail.com)**
+
+If you have accessibility suggestions, bug reports, or questions, feel free to reach out.

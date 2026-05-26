@@ -77,4 +77,22 @@
     <string name="lang_spanish">स्पेनिश</string>
     <string name="lang_portuguese_br">पुर्तगाली (ब्राज़ील)</string>
     <string name="lang_hindi">हिन्दी</string>
+
+    <!-- Donation feature -->
+    <string name="section_support">समर्थन</string>
+    <string name="support_card_title">विकास का समर्थन करें ❤️</string>
+    <string name="support_card_desc">FocusLock मुफ़्त है। अगर यह उपयोगी लगे, तो आप इसके विकास का समर्थन कर सकते हैं।</string>
+    <string name="donation_screen_title">प्रोजेक्ट को सहयोग दें</string>
+    <string name="donation_intro">FocusLock पूरी तरह मुफ़्त है। अगर यह आपके लिए उपयोगी है, तो आप स्वेच्छा से इसके विकास को सहयोग दे सकते हैं — कोई दबाव नहीं, कोई अंतर नहीं।</string>
+    <string name="donation_loading">विकल्प लोड हो रहे हैं…</string>
+    <string name="donation_success_title">धन्यवाद! ❤️</string>
+    <string name="donation_success_message">आपका समर्थन बहुत मायने रखता है और FocusLock को जीवित रखने में मदद करता है।</string>
+    <string name="donation_success_action">सेटिंग पर वापस जाएं</string>
+    <string name="donation_pending_title">खरीदारी लंबित</string>
+    <string name="donation_pending_message">आपका योगदान प्रक्रिया में है। आपके समर्थन के लिए धन्यवाद!</string>
+    <string name="donation_error_title">कुछ गलत हो गया</string>
+    <string name="donation_error_message">दान विकल्प लोड नहीं हो सके। अपना कनेक्शन जांचें और दोबारा प्रयास करें।</string>
+    <string name="donation_error_launch">खरीदारी शुरू नहीं हो सकी। कृपया दोबारा प्रयास करें।</string>
+    <string name="donation_retry">पुनः प्रयास करें</string>
+    <string name="donation_back">← वापस</string>
 </resources>

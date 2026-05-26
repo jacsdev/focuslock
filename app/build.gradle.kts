@@ -31,7 +31,7 @@ android {
         applicationId = "com.developermind.focuslock"
         minSdk = 26
         targetSdk = 36
-        versionCode = 12
+        versionCode = 13
         versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -75,6 +75,8 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.navigation.compose)
+    implementation(libs.billing.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

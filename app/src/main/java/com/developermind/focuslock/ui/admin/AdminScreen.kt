@@ -83,6 +83,7 @@ fun AdminScreen(
     onClearWeatherCity: () -> Unit = {},
     onRequestDeleteCity: () -> Unit = {},
     onCancelDeleteCity: () -> Unit = {},
+    onSupportClick: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -221,9 +222,52 @@ fun AdminScreen(
             onLanguageSelected = onSetLanguage,
         )
 
+        Spacer(modifier = Modifier.height(40.dp))
+        SectionHeader(stringResource(R.string.section_support))
+        Spacer(modifier = Modifier.height(12.dp))
+        SupportCard(onClick = onSupportClick)
         Spacer(modifier = Modifier.height(48.dp))
         AppFooter()
         Spacer(modifier = Modifier.height(28.dp))
+    }
+}
+
+@Composable
+private fun SupportCard(onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(CardColor)
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stringResource(R.string.support_card_title),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = TextPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = stringResource(R.string.support_card_desc),
+                fontSize = 13.sp,
+                color = TextSecondary,
+                lineHeight = 18.sp,
+            )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = "›",
+            fontSize = 20.sp,
+            color = Color(0xFF64B5F6),
+            fontWeight = FontWeight.Light,
+        )
     }
 }
 

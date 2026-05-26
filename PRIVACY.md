@@ -1,156 +1,389 @@
 # Privacy Policy — FocusLock
 
-**Effective date:** May 25, 2025
-**Contact:** jacsdev@gmail.com
+**Effective date:** May 25, 2026
+**Developer:** jacsdev
+**Contact:** [jacsdev@gmail.com](mailto:jacsdev@gmail.com)
 
 ---
 
-## Our Mission
+# Overview
 
-FocusLock exists to make Android phones easier to use for people who struggle with small text, cluttered screens, and complex visual interfaces — especially older adults and people with low vision.
+FocusLock is an Android accessibility application designed to improve readability for people with low vision, older adults, and users who struggle with small or cluttered interfaces.
 
-Setting up a full accessibility theme on Android can be overwhelming. FocusLock takes a different approach: it replaces the default lock screen with a large-text, high-contrast overlay that shows exactly what matters — time, date, and weather — without requiring any technical knowledge to set up.
+The app provides a simplified, high-contrast accessibility display with enlarged text showing essential information such as time, date, battery level, and optional weather information.
 
-This app is free, contains no ads, and does not sell your data. Optional one-time donations help keep it maintained. Our privacy practices are as simple as our interface.
+FocusLock is designed with privacy, transparency, and minimal data collection in mind.
 
----
+This app:
 
-## What Data We Collect and Why
+* contains no ads
+* does not sell user data
+* does not profile users
+* does not collect personal identifiers
+* performs nearly all processing locally on the device
 
-### 1. Data We Do NOT Collect
-
-FocusLock does **not** collect:
-- Your name, email address, or any personal identifiers
-- Your location (GPS or IP-based)
-- Your contacts, messages, photos, or files
-- Any data entered on your lock screen
-- Any data from other apps on your device
-
-### 2. Crash Reports (Firebase Crashlytics)
-
-**What:** If the app crashes, an automated crash report is sent to Google's Firebase Crashlytics service.
-
-**Contains:** The type of error, a stack trace (technical log of what the app was doing), your device model, Android version, and app version. No personally identifiable information.
-
-**Why:** So we can identify and fix bugs. Without crash data, silent failures go unnoticed.
-
-**Your control:** You can opt out of crash reporting via Android's device settings under Privacy → Usage & Diagnostics.
-
-### 3. Anonymous Usage Statistics (Firebase Analytics)
-
-**What:** Basic, aggregated events such as "app opened" or "donation screen viewed."
-
-**Contains:** No names, no identifiers, no content you type or see. Events are anonymous counts.
-
-**Why:** To understand how many people use the app and whether the donation feature works correctly. We never build user profiles or track individuals.
-
-**Your control:** You can opt out via Android's device settings under Privacy → Usage & Diagnostics.
-
-### 4. Weather Data (Open-Meteo)
-
-**What:** To display current weather on your lock screen, FocusLock uses the [Open-Meteo](https://open-meteo.com) free weather API.
-
-**How it works:** You manually enter a city name in the app settings. FocusLock sends that city name to Open-Meteo's geocoding service to retrieve a latitude and longitude. After that, only the coordinates are used for weather requests — your city name is not stored on any server.
-
-**Open-Meteo's policy:** Open-Meteo is a privacy-focused, open-source weather service with no user accounts and no tracking. Their data is sourced from public meteorological services (NOAA, DWD, ECMWF). See [open-meteo.com](https://open-meteo.com) for their privacy information.
-
-**Stored locally:** Your entered city and retrieved coordinates are saved only on your device using Android DataStore. They are never transmitted to us.
-
-### 5. Donations (Google Play Billing)
-
-**What:** FocusLock offers optional one-time donations processed entirely by Google Play.
-
-**We never see:** Your payment method, card number, billing address, or any financial data. All payment processing is handled by Google.
-
-**What we receive:** Confirmation that a purchase was completed, so we can show a thank-you message. This confirmation contains only the product ID (e.g., "focuslock_donation_small") — no personal details.
-
-**Purpose:** Donations are voluntary and unlock no features. They simply help cover the cost of maintaining a free app.
+Optional one-time donations help support maintenance and future accessibility improvements.
 
 ---
 
-## Accessibility Service
+# Core Accessibility Functionality
 
-FocusLock uses Android's Accessibility Service to display a fullscreen overlay on the lock screen. This is the only mechanism Android provides for drawing over the lock screen without requiring a full system theme replacement — which is precisely what makes it suitable for users who cannot navigate complex setup processes.
+The Android Accessibility Service is the core functionality of FocusLock.
 
-**Explicit declaration required by Google Play:**
+Without the Accessibility Service, the app cannot provide enlarged high-contrast visual information for users with low vision.
 
-> The Accessibility Service in FocusLock is used **solely** to render a large-text, high-contrast lock screen overlay.
->
-> - Data accessed through the Accessibility Service is **NOT sold** to third parties.
-> - It is **NOT used** for advertising, tracking, or user profiling.
-> - It is **NOT shared** with any party for purposes unrelated to the app's core function.
-> - All processing happens **on-device**. No accessibility data is transmitted to our servers.
+FocusLock uses Android Accessibility APIs exclusively to:
 
----
+* display enlarged text
+* improve readability
+* render accessibility-focused visual information
 
-## Permissions Explained
-
-| Permission | Why it's needed |
-|---|---|
-| `SYSTEM_ALERT_WINDOW` | Draw the lock screen overlay on top of the system UI |
-| `ACCESSIBILITY_SERVICE` | Access the overlay window type required for lock screen display |
-| `BIND_ACCESSIBILITY_SERVICE` | Required by Android to register as an Accessibility Service |
-| `FOREGROUND_SERVICE` | Keep the overlay running reliably; Android requires a notification for long-running services |
-| `FOREGROUND_SERVICE_SPECIAL_USE` | Android 14+ category for foreground services with specialized functionality |
-| `RECEIVE_BOOT_COMPLETED` | Restart the lock screen service automatically after the phone is rebooted |
-| `INTERNET` | Fetch weather data from Open-Meteo and send anonymous crash/analytics reports |
-| `ACCESS_NETWORK_STATE` | Check if the device is online before making weather requests |
-| `BILLING` | Process optional one-time donations through Google Play |
+The app does not use accessibility features for monitoring, automation, surveillance, advertising, or data collection.
 
 ---
 
-## Data Storage Summary
+# Accessibility Data Handling
 
-| Data | Where stored | Transmitted to |
-|---|---|---|
-| Your city name setting | On your device only | Open-Meteo (once, for geocoding) |
-| Coordinates for weather | On your device only | Open-Meteo (weather requests) |
-| App preferences | On your device only | Nowhere |
-| Crash reports | Firebase Crashlytics | If a crash occurs |
-| Anonymous analytics events | Firebase Analytics | On key app events |
-| Donation purchase token | Not stored | Google Play (for verification) |
+FocusLock uses Android Accessibility APIs only to display enlarged visual information for low-vision users.
 
----
+FocusLock does NOT:
 
-## Third-Party Services
+* read text displayed in other apps
+* capture passwords or typed content
+* inspect notifications
+* monitor user behavior
+* record screen activity
+* collect accessibility events for analytics
+* perform gestures or automated interactions
+* access content from other applications
 
-FocusLock uses the following third-party services. Each has its own privacy policy:
+The accessibility service is limited exclusively to rendering the accessibility interface.
 
-- **Google Firebase Analytics** — [firebase.google.com/support/privacy](https://firebase.google.com/support/privacy)
-- **Google Firebase Crashlytics** — [firebase.google.com/support/privacy](https://firebase.google.com/support/privacy)
-- **Google Play Billing** — [payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice](https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice)
-- **Open-Meteo Weather API** — [open-meteo.com](https://open-meteo.com)
+No accessibility-related data is transmitted, stored remotely, or shared with third parties.
 
----
-
-## Children's Privacy
-
-FocusLock is not directed at children under 13. We do not knowingly collect personal information from anyone under 13. The app's target audience is older adults and people with low vision. If you believe a child has submitted information through this app, please contact us and we will promptly delete it.
+All accessibility-related processing happens locally on the device.
 
 ---
 
-## Your Rights
+# Information We Do NOT Collect
 
-Since FocusLock stores almost all data locally on your device, you are already in direct control of it. Specifically:
+FocusLock does not collect:
 
-- **Delete app data:** Go to Android Settings → Apps → FocusLock → Storage → Clear Data. This removes all locally stored preferences.
-- **Uninstall the app:** Removes all local data permanently.
-- **Opt out of analytics and crash reports:** Android Settings → Privacy → Usage & Diagnostics → turn off.
-- **Contact us:** If you have questions about your data, email us at jacsdev@gmail.com.
+* names
+* email addresses
+* phone numbers
+* contacts
+* photos
+* videos
+* files
+* messages
+* passwords
+* payment card information
+* precise location data
+* browsing history
+* app usage from other apps
+* accessibility content from other applications
 
-We will respond to any privacy inquiry within 30 days.
+The app does not require user registration or account creation.
 
 ---
 
-## Changes to This Policy
+# No User Account Required
 
-If we make significant changes to this policy, we will update the date at the top and, where possible, notify users through an in-app message or Play Store update notes. Continued use of FocusLock after changes are posted means you accept the updated policy.
+FocusLock can be fully used without:
+
+* creating an account
+* signing in
+* registering
+* providing personal information
+
+All preferences are stored locally on the device.
 
 ---
 
-## Contact
+# Information We Collect
+
+FocusLock collects only limited technical information necessary for app functionality, diagnostics, and optional features.
+
+---
+
+## 1. Crash Reports (Firebase Crashlytics)
+
+### What is collected
+
+If the app crashes, Firebase Crashlytics may automatically collect:
+
+* crash stack traces
+* device model
+* Android version
+* app version
+* technical diagnostic information
+
+### What is NOT collected
+
+Crash reports do not include:
+
+* personal identifiers
+* passwords
+* messages
+* accessibility content
+* typed text
+* screenshots
+
+### Why this data is collected
+
+Crash diagnostics help identify bugs and improve app stability.
+
+### User control
+
+Users may disable Android diagnostic sharing features in device privacy settings.
+
+---
+
+## 2. Anonymous Usage Analytics (Firebase Analytics)
+
+### What is collected
+
+FocusLock may collect anonymous aggregated events such as:
+
+* app opened
+* settings viewed
+* weather enabled
+* donation screen viewed
+
+### Analytics limitations
+
+Firebase Analytics is configured without:
+
+* advertising features
+* personalized advertising
+* cross-app tracking
+* behavioral profiling
+
+FocusLock does not use analytics data for:
+
+* advertising
+* marketing
+* user profiling
+* personalized recommendations
+
+### User control
+
+Users may disable analytics sharing through Android privacy settings.
+
+---
+
+## 3. Weather Information (Open-Meteo)
+
+FocusLock optionally displays weather information using the Open-Meteo API.
+
+### How it works
+
+Users manually enter a city name inside the app.
+
+The city name is sent to Open-Meteo's geocoding service to retrieve approximate coordinates required for weather requests.
+
+After geocoding:
+
+* weather requests use coordinates only
+* the city name is stored locally on the device
+* no weather data is sent to the developer
+
+### Data stored locally
+
+Stored locally on the device:
+
+* city name
+* latitude and longitude
+* weather preferences
+
+### Permissions
+
+FocusLock does not request location permission.
+
+---
+
+## 4. Donations (Google Play Billing)
+
+FocusLock offers optional one-time donations processed entirely through Google Play Billing.
+
+### Payment information
+
+FocusLock never receives:
+
+* card numbers
+* billing addresses
+* banking information
+* payment credentials
+
+All payment processing is handled by Google Play.
+
+### What the app receives
+
+The app only receives:
+
+* purchase confirmation
+* donation product identifier
+
+This information is used solely to confirm successful donations.
+
+Donations do not unlock features or affect app functionality.
+
+---
+
+# Data Storage
+
+| Data                  | Storage Location     | Shared With          |
+| --------------------- | -------------------- | -------------------- |
+| App settings          | User device only     | Nobody               |
+| Theme preferences     | User device only     | Nobody               |
+| Weather city          | User device only     | Open-Meteo geocoding |
+| Weather coordinates   | User device only     | Open-Meteo           |
+| Crash diagnostics     | Firebase Crashlytics | Google Firebase      |
+| Anonymous analytics   | Firebase Analytics   | Google Firebase      |
+| Donation confirmation | Google Play Billing  | Google               |
+
+---
+
+# Third-Party Services
+
+FocusLock uses limited third-party services for diagnostics, analytics, weather information, and optional donations.
+
+These services operate under their own privacy policies.
+
+## Included Services
+
+### Google Firebase Analytics
+
+[https://firebase.google.com/support/privacy](https://firebase.google.com/support/privacy)
+
+### Google Firebase Crashlytics
+
+[https://firebase.google.com/support/privacy](https://firebase.google.com/support/privacy)
+
+### Google Play Billing
+
+[https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice](https://payments.google.com/payments/apis-secure/get_legal_document?ldo=0&ldt=privacynotice)
+
+### Open-Meteo
+
+[https://open-meteo.com](https://open-meteo.com)
+
+---
+
+# Third-Party SDK Disclosure
+
+FocusLock includes limited third-party SDKs strictly for:
+
+* crash diagnostics
+* anonymous usage statistics
+* optional donation processing
+
+Included SDKs:
+
+* Firebase Analytics
+* Firebase Crashlytics
+* Google Play Billing
+
+No SDKs are used for:
+
+* advertising
+* behavioral tracking
+* personalized marketing
+
+---
+
+# Permissions Explained
+
+| Permission                             | Purpose                                               |
+| -------------------------------------- | ----------------------------------------------------- |
+| `BIND_ACCESSIBILITY_SERVICE`           | Required for accessibility functionality              |
+| `FOREGROUND_SERVICE`                   | Maintain accessibility-related functionality          |
+| `INTERNET`                             | Retrieve optional weather information and diagnostics |
+| `ACCESS_NETWORK_STATE`                 | Check connectivity before weather requests            |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Improve reliability on some devices                   |
+
+FocusLock does not request:
+
+* location access
+* microphone access
+* camera access
+* contacts access
+* SMS access
+* storage access
+
+---
+
+# Children's Privacy
+
+FocusLock is not directed toward children under 13.
+
+The app is designed for accessibility assistance and general usability for adults and low-vision users.
+
+We do not knowingly collect personal information from children.
+
+If you believe a child has provided information through the app, contact us and we will promptly address the issue.
+
+---
+
+# Legal Basis for Processing
+
+Where applicable under privacy laws such as the GDPR, FocusLock processes limited technical data based on:
+
+* legitimate interest (application stability and diagnostics)
+* user consent (optional analytics and donations)
+
+FocusLock does not process personal data for:
+
+* advertising
+* profiling
+* behavioral analysis
+* marketing purposes
+
+---
+
+# Your Rights
+
+Users remain in direct control of nearly all data because most information is stored locally on the device.
+
+Users may:
+
+* clear app data through Android Settings
+* uninstall the app at any time
+* disable analytics through Android privacy settings
+* disable weather functionality
+* contact the developer regarding privacy questions
+
+---
+
+# Accessibility Commitment
+
+FocusLock was created to improve readability and accessibility for users who struggle with standard Android interfaces.
+
+We are committed to:
+
+* accessibility-first design
+* privacy-first development
+* minimal data collection
+* transparent behavior
+* non-intrusive functionality
+
+---
+
+# Changes to This Policy
+
+If this Privacy Policy changes significantly:
+
+* the effective date will be updated
+* users may be notified through app updates or release notes
+
+Continued use of FocusLock after changes are published constitutes acceptance of the updated policy.
+
+---
+
+# Contact
 
 **Developer:** jacsdev
-**Email:** jacsdev@gmail.com
+**Email:** [jacsdev@gmail.com](mailto:jacsdev@gmail.com)
 
-We take privacy seriously because our users do. If something in this policy is unclear, email us — we'll explain it in plain language.
+If you have questions about accessibility, privacy, or data handling, feel free to contact us.

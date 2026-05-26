@@ -77,4 +77,22 @@
     <string name="lang_spanish">Espanhol</string>
     <string name="lang_portuguese_br">Português (Brasil)</string>
     <string name="lang_hindi">Hindi</string>
+
+    <!-- Donation feature -->
+    <string name="section_support">Apoio</string>
+    <string name="support_card_title">Apoiar o desenvolvimento ❤️</string>
+    <string name="support_card_desc">FocusLock é gratuito. Se for útil para você, pode apoiar o desenvolvimento.</string>
+    <string name="donation_screen_title">Apoiar o projeto</string>
+    <string name="donation_intro">FocusLock é completamente gratuito. Se ele for útil para você, pode apoiar seu desenvolvimento de forma voluntária — sem pressão e sem diferença de funcionalidades.</string>
+    <string name="donation_loading">Carregando opções…</string>
+    <string name="donation_success_title">Obrigado! ❤️</string>
+    <string name="donation_success_message">Seu apoio significa muito e ajuda a manter o FocusLock vivo.</string>
+    <string name="donation_success_action">Voltar às configurações</string>
+    <string name="donation_pending_title">Compra pendente</string>
+    <string name="donation_pending_message">Sua contribuição está sendo processada. Obrigado pelo seu apoio!</string>
+    <string name="donation_error_title">Algo deu errado</string>
+    <string name="donation_error_message">Não foi possível carregar as opções de doação. Verifique sua conexão e tente novamente.</string>
+    <string name="donation_error_launch">Não foi possível iniciar a compra. Por favor, tente novamente.</string>
+    <string name="donation_retry">Tentar novamente</string>
+    <string name="donation_back">← Voltar</string>
 </resources>
