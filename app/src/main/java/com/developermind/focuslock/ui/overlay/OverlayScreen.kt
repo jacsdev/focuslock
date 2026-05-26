@@ -41,6 +41,7 @@ fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit) {
                 city = uiState.weatherCity,
                 temperature = uiState.temperature,
                 isStale = uiState.temperatureIsStale,
+                condition = uiState.weatherCondition,
             )
         }
     }

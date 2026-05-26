@@ -60,6 +60,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.developermind.focuslock.R
 import com.developermind.focuslock.data.model.AppTheme
+import com.developermind.focuslock.data.model.WeatherCondition
+import com.developermind.focuslock.ui.components.WeatherIcon
 import com.developermind.focuslock.util.LocaleManager
 import com.developermind.focuslock.util.LanguageOption
 import kotlin.math.roundToInt
@@ -196,6 +198,7 @@ fun AdminScreen(
                 cityEditState = uiState.cityEditState,
                 cachedTemperature = uiState.cachedTemperature,
                 temperatureIsStale = uiState.temperatureIsStale,
+                weatherCondition = uiState.weatherCondition,
                 onSave = onSetWeatherCity,
                 onDelete = onClearWeatherCity,
                 onRequestDelete = onRequestDeleteCity,
@@ -502,6 +505,7 @@ private fun CityInputCard(
     cityEditState: CityEditState,
     cachedTemperature: Float?,
     temperatureIsStale: Boolean,
+    weatherCondition: WeatherCondition?,
     onSave: (String) -> Unit,
     onDelete: () -> Unit,
     onRequestDelete: () -> Unit,
@@ -543,12 +547,22 @@ private fun CityInputCard(
                         overflow = TextOverflow.Ellipsis,
                     )
                     if (cachedTemperature != null) {
-                        Text(
-                            text = "${cachedTemperature.roundToInt()} °C",
-                            fontSize = 12.sp,
-                            color = if (temperatureIsStale) Color(0xFF555555) else TextSecondary,
-                            maxLines = 1,
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (weatherCondition != null) {
+                                WeatherIcon(
+                                    condition = weatherCondition,
+                                    size = 16.dp,
+                                    tint = if (temperatureIsStale) Color(0xFF555555) else TextSecondary,
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                            }
+                            Text(
+                                text = "${cachedTemperature.roundToInt()} °C",
+                                fontSize = 12.sp,
+                                color = if (temperatureIsStale) Color(0xFF555555) else TextSecondary,
+                                maxLines = 1,
+                            )
+                        }
                     }
                 }
                 // Right: action buttons

@@ -2,14 +2,10 @@ package com.developermind.focuslock.service
 
 import android.accessibilityservice.AccessibilityService
 import android.app.KeyguardManager
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.os.Build
@@ -21,12 +17,9 @@ import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
-import com.developermind.focuslock.FocusLockApplication
-import com.developermind.focuslock.MainActivity
-import com.developermind.focuslock.R
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.developermind.focuslock.data.repository.BatteryRepository
 import com.developermind.focuslock.data.repository.PreferencesRepository
 import com.developermind.focuslock.data.repository.ThemeRepository
@@ -67,15 +60,36 @@ class FocusLockAccessibilityService : AccessibilityService() {
     private var screenReceiver: ScreenReceiver? = null
 
     override fun onServiceConnected() {
-        windowManager = getSystemService(WindowManager::class.java)
-        startForegroundCompat()
-        lifecycleOwner.onCreate()
-        setupOverlayView()
-        observeBattery()
-        observeTheme()
-        observePreferences()
-        observeTemperature()
-        registerScreenReceiver()
+        val crashlytics = FirebaseCrashlytics.getInstance()
+        crashlytics.setCustomKey("api_level", Build.VERSION.SDK_INT)
+        crashlytics.log("onServiceConnected START — API ${Build.VERSION.SDK_INT}")
+        Log.i(TAG, "▶ onServiceConnected — API ${Build.VERSION.SDK_INT}")
+        try {
+            windowManager = getSystemService(WindowManager::class.java)
+            crashlytics.log("step: WindowManager OK")
+            Log.i(TAG, "  ✓ WindowManager")
+
+            lifecycleOwner.onCreate()
+            crashlytics.log("step: lifecycleOwner OK")
+            Log.i(TAG, "  ✓ lifecycleOwner")
+
+            setupOverlayView()
+            crashlytics.log("step: overlayView OK")
+            Log.i(TAG, "  ✓ overlayView")
+
+            observeBattery()
+            observeTheme()
+            observePreferences()
+            observeTemperature()
+            registerScreenReceiver()
+            crashlytics.log("onServiceConnected COMPLETE")
+            Log.i(TAG, "✅ onServiceConnected COMPLETE")
+        } catch (e: Exception) {
+            val msg = "onServiceConnected FAILED: ${e.javaClass.simpleName}: ${e.message}"
+            Log.e(TAG, "💥 $msg", e)
+            crashlytics.log(msg)
+            crashlytics.recordException(e)
+        }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {}
@@ -84,7 +98,10 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        stopForeground(STOP_FOREGROUND_REMOVE)
+        // Traceability: lets us confirm in Crashlytics when/why the system tears
+        // the service down (battery, Doze, OEM power manager, user disable).
+        Log.w(TAG, "onDestroy — service torn down by system")
+        FirebaseCrashlytics.getInstance().log("FocusLockAccessibilityService onDestroy")
         safeRemoveOverlay()
         lifecycleOwner.onDestroy()
         serviceScope.cancel()
@@ -92,29 +109,6 @@ class FocusLockAccessibilityService : AccessibilityService() {
             try { unregisterReceiver(it) } catch (e: Exception) {
                 Log.e(TAG, "Error al desregistrar ScreenReceiver: ${e.message}")
             }
-        }
-    }
-
-    // ── Foreground promotion ──────────────────────────────────────────────────
-
-    private fun startForegroundCompat() {
-        val tapIntent = PendingIntent.getActivity(
-            this, 0,
-            Intent(this, MainActivity::class.java),
-            PendingIntent.FLAG_IMMUTABLE,
-        )
-        val notification = NotificationCompat.Builder(this, FocusLockApplication.CHANNEL_ID)
-            .setContentTitle(getString(R.string.notification_service_active))
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentIntent(tapIntent)
-            .setOngoing(true)
-            .setSilent(true)
-            .build()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
-        } else {
-            startForeground(NOTIFICATION_ID, notification)
         }
     }
 
@@ -258,6 +252,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
                 uiState.value = uiState.value.copy(
                     temperature = result?.temperature,
                     temperatureIsStale = result?.isStale ?: false,
+                    weatherCondition = result?.condition,
                 )
             }
         }
@@ -283,7 +278,6 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     companion object {
         private const val TAG = "FocusLockA11y"
-        private const val NOTIFICATION_ID = 1
         private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
         fun currentTime(): String = LocalTime.now().format(timeFormatter)

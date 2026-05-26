@@ -3,7 +3,9 @@
     "allow": [
       "mcp__plugin_engram_engram__mem_search",
       "Bash(./gradlew :app:compileDebugKotlin)",
-      "mcp__plugin_engram_engram__mem_save"
+      "mcp__plugin_engram_engram__mem_save",
+      "Bash(xargs cat)",
+      "mcp__plugin_engram_engram__mem_judge"
     ]
   }
 }

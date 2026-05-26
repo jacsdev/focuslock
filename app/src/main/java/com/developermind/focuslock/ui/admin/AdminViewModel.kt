@@ -64,6 +64,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
                     it.copy(
                         cachedTemperature = result?.temperature,
                         temperatureIsStale = result?.isStale ?: false,
+                        weatherCondition = result?.condition,
                     )
                 }
             }

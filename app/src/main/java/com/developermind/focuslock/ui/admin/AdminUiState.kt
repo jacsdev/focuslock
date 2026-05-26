@@ -1,6 +1,7 @@
 package com.developermind.focuslock.ui.admin
 
 import com.developermind.focuslock.data.model.AppTheme
+import com.developermind.focuslock.data.model.WeatherCondition
 import com.developermind.focuslock.util.LocaleManager
 
 data class AdminUiState(
@@ -14,4 +15,5 @@ data class AdminUiState(
     val cityEditState: CityEditState = CityEditState.Idle,
     val cachedTemperature: Float? = null,
     val temperatureIsStale: Boolean = false,
+    val weatherCondition: WeatherCondition? = null,
 )

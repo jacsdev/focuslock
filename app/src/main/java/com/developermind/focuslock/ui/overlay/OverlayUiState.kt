@@ -2,6 +2,7 @@ package com.developermind.focuslock.ui.overlay
 
 import com.developermind.focuslock.data.model.AppTheme
 import com.developermind.focuslock.data.model.BatteryState
+import com.developermind.focuslock.data.model.WeatherCondition
 
 data class OverlayUiState(
     val time: String = "",
@@ -13,4 +14,5 @@ data class OverlayUiState(
     val weatherCity: String = "",
     val temperature: Float? = null,
     val temperatureIsStale: Boolean = false,
+    val weatherCondition: WeatherCondition? = null,
 )
