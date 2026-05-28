@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.developermind.focuslock.data.model.OverlayPreferences
 import com.developermind.focuslock.data.repository.BatteryRepository
 import com.developermind.focuslock.data.repository.PreferencesRepository
 import com.developermind.focuslock.data.repository.ThemeRepository
@@ -29,6 +30,7 @@ import com.developermind.focuslock.ui.overlay.OverlayScreen
 import com.developermind.focuslock.ui.overlay.OverlayUiState
 import com.developermind.focuslock.ui.theme.FocusLockTheme
 import com.developermind.focuslock.util.ServiceLifecycleOwner
+import com.developermind.focuslock.service.KeepAliveService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -59,6 +61,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
     private val weatherRepository by lazy { WeatherRepository(this) }
     private var screenReceiver: ScreenReceiver? = null
 
+    private var currentPrefs = OverlayPreferences()
+
     override fun onServiceConnected() {
         val crashlytics = FirebaseCrashlytics.getInstance()
         crashlytics.setCustomKey("api_level", Build.VERSION.SDK_INT)
@@ -77,6 +81,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
             crashlytics.log("step: overlayView OK")
             Log.i(TAG, "  ✓ overlayView")
 
+            ensureKeepAlive()
             observeBattery()
             observeTheme()
             observePreferences()
@@ -112,6 +117,23 @@ class FocusLockAccessibilityService : AccessibilityService() {
         }
     }
 
+    // ── Keep-alive ────────────────────────────────────────────────────────────
+
+    private fun ensureKeepAlive() {
+        // onServiceConnected() is a system callback — starting a foreground service here
+        // is always allowed, even on API 31+ where background starts are restricted.
+        try {
+            val intent = Intent(this, KeepAliveService::class.java)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "ensureKeepAlive failed: ${e.message}")
+        }
+    }
+
     // ── Overlay ───────────────────────────────────────────────────────────────
 
     private fun setupOverlayView() {
@@ -131,6 +153,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
 
     @Suppress("DEPRECATION")
     private fun safeAddOverlay() {
+        if (!currentPrefs.isEnabled) return
         if (isOverlayAttached) return
         val keyguard = getSystemService(KeyguardManager::class.java)
         if (!keyguard.isKeyguardLocked) return
@@ -237,6 +260,9 @@ class FocusLockAccessibilityService : AccessibilityService() {
     private fun observePreferences() {
         serviceScope.launch {
             preferencesRepository.observePreferences().collect { prefs ->
+                val wasEnabled = currentPrefs.isEnabled
+                currentPrefs = prefs
+                if (wasEnabled && !prefs.isEnabled) safeRemoveOverlay()
                 uiState.value = uiState.value.copy(
                     showBattery = prefs.showBattery,
                     showTemperature = prefs.showTemperature,

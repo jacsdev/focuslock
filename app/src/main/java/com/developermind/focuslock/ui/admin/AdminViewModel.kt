@@ -50,6 +50,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
             .onEach { prefs ->
                 _uiState.update {
                     it.copy(
+                        isFocusLockEnabled = prefs.isEnabled,
                         showBattery = prefs.showBattery,
                         showTemperature = prefs.showTemperature,
                         weatherCity = prefs.weatherCity,
@@ -91,6 +92,10 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
                 isAccessibilityServiceEnabled = FocusLockAccessibilityService.isEnabled(context),
             )
         }
+    }
+
+    fun setFocusLockEnabled(value: Boolean) {
+        viewModelScope.launch { preferencesRepository.setEnabled(value) }
     }
 
     fun setTheme(theme: AppTheme) {

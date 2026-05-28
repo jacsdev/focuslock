@@ -18,6 +18,7 @@ class PreferencesRepository(context: Context) {
     private val appContext = context.applicationContext
 
     private object Keys {
+        val IS_ENABLED = booleanPreferencesKey("focuslock_enabled")
         val SHOW_BATTERY = booleanPreferencesKey("show_battery")
         val SHOW_TEMPERATURE = booleanPreferencesKey("show_temperature")
         val WEATHER_CITY = stringPreferencesKey("weather_city")
@@ -26,11 +27,16 @@ class PreferencesRepository(context: Context) {
     fun observePreferences(): Flow<OverlayPreferences> =
         appContext.dataStore.data.map { prefs ->
             OverlayPreferences(
+                isEnabled = prefs[Keys.IS_ENABLED] ?: true,
                 showBattery = prefs[Keys.SHOW_BATTERY] ?: true,
                 showTemperature = prefs[Keys.SHOW_TEMPERATURE] ?: false,
                 weatherCity = prefs[Keys.WEATHER_CITY] ?: "",
             )
         }
+
+    suspend fun setEnabled(value: Boolean) {
+        appContext.dataStore.edit { it[Keys.IS_ENABLED] = value }
+    }
 
     suspend fun setShowBattery(value: Boolean) {
         appContext.dataStore.edit { it[Keys.SHOW_BATTERY] = value }

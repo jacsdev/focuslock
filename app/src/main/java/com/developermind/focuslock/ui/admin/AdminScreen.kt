@@ -42,6 +42,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -64,6 +65,7 @@ import com.developermind.focuslock.data.model.WeatherCondition
 import com.developermind.focuslock.ui.components.WeatherIcon
 import com.developermind.focuslock.util.LocaleManager
 import com.developermind.focuslock.util.LanguageOption
+import com.developermind.focuslock.util.OemDeepLinks
 import kotlin.math.roundToInt
 
 private val BackgroundColor = Color(0xFF0D0D0D)
@@ -82,6 +84,7 @@ fun AdminScreen(
     onSetShowBattery: (Boolean) -> Unit = {},
     onSetShowTemperature: (Boolean) -> Unit = {},
     onSetWeatherCity: (String) -> Unit = {},
+    onSetFocusLockEnabled: (Boolean) -> Unit = {},
     onClearWeatherCity: () -> Unit = {},
     onRequestDeleteCity: () -> Unit = {},
     onCancelDeleteCity: () -> Unit = {},
@@ -114,62 +117,81 @@ fun AdminScreen(
         SectionHeader(stringResource(R.string.section_permissions))
         Spacer(modifier = Modifier.height(12.dp))
 
-        PermissionCard(
-            title = stringResource(R.string.perm_accessibility_title),
-            description = stringResource(R.string.perm_accessibility_desc),
-            isGranted = uiState.isAccessibilityServiceEnabled,
-            grantedLabel = stringResource(R.string.perm_accessibility_status_ok),
-            deniedLabel = stringResource(R.string.perm_accessibility_status_restricted),
-            actionLabel = if (uiState.isAccessibilityServiceEnabled)
-                stringResource(R.string.perm_accessibility_action_change)
-            else
-                stringResource(R.string.perm_accessibility_action_enable),
-            onAction = {
-                context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-            },
+        SwitchCard(
+            title = stringResource(R.string.toggle_focuslock_title),
+            description = stringResource(
+                if (uiState.isFocusLockEnabled) R.string.toggle_focuslock_desc_on
+                else R.string.toggle_focuslock_desc_off,
+            ),
+            checked = uiState.isFocusLockEnabled,
+            onCheckedChange = onSetFocusLockEnabled,
         )
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        PermissionCard(
-            title = stringResource(R.string.perm_battery_title),
-            description = stringResource(R.string.perm_battery_desc),
-            isGranted = uiState.isBatteryOptimizationIgnored,
-            grantedLabel = stringResource(R.string.perm_battery_status_ok),
-            deniedLabel = stringResource(R.string.perm_battery_status_restricted),
-            actionLabel = if (uiState.isBatteryOptimizationIgnored)
-                stringResource(R.string.perm_battery_action_change)
-            else
-                stringResource(R.string.perm_battery_action_disable),
-            onAction = {
-                try {
-                    context.startActivity(
-                        Intent(
-                            Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                            Uri.parse("package:${context.packageName}"),
+        Column(modifier = Modifier.alpha(if (uiState.isFocusLockEnabled) 1f else 0.4f)) {
+            PermissionCard(
+                title = stringResource(R.string.perm_accessibility_title),
+                description = stringResource(R.string.perm_accessibility_desc),
+                isGranted = uiState.isAccessibilityServiceEnabled,
+                grantedLabel = stringResource(R.string.perm_accessibility_status_ok),
+                deniedLabel = stringResource(R.string.perm_accessibility_status_restricted),
+                actionLabel = if (uiState.isAccessibilityServiceEnabled)
+                    stringResource(R.string.perm_accessibility_action_change)
+                else
+                    stringResource(R.string.perm_accessibility_action_enable),
+                onAction = {
+                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                },
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            PermissionCard(
+                title = stringResource(R.string.perm_battery_title),
+                description = stringResource(R.string.perm_battery_desc),
+                isGranted = uiState.isBatteryOptimizationIgnored,
+                grantedLabel = stringResource(R.string.perm_battery_status_ok),
+                deniedLabel = stringResource(R.string.perm_battery_status_restricted),
+                actionLabel = if (uiState.isBatteryOptimizationIgnored)
+                    stringResource(R.string.perm_battery_action_change)
+                else
+                    stringResource(R.string.perm_battery_action_disable),
+                onAction = {
+                    try {
+                        context.startActivity(
+                            Intent(
+                                Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                                Uri.parse("package:${context.packageName}"),
+                            )
                         )
-                    )
-                } catch (_: Exception) {
-                    context.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
-                }
-            },
-        )
+                    } catch (_: Exception) {
+                        context.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
+                    }
+                },
+            )
 
-        Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-        InfoCard(
-            title = stringResource(R.string.perm_autostart_title),
-            description = stringResource(R.string.perm_autostart_desc),
-            actionLabel = stringResource(R.string.perm_autostart_action),
-            onAction = {
-                context.startActivity(
-                    Intent(
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:${context.packageName}"),
-                    )
+            InfoCard(
+                title = stringResource(R.string.perm_autostart_title),
+                description = stringResource(R.string.perm_autostart_desc),
+                actionLabel = stringResource(R.string.perm_autostart_action),
+                highlighted = true,
+                onAction = { OemDeepLinks.openAutostart(context) },
+            )
+
+            if (OemDeepLinks.isMiui) {
+                Spacer(modifier = Modifier.height(10.dp))
+                InfoCard(
+                    title = stringResource(R.string.perm_miui_battery_title),
+                    description = stringResource(R.string.perm_miui_battery_desc),
+                    actionLabel = stringResource(R.string.perm_miui_battery_action),
+                    highlighted = true,
+                    onAction = { OemDeepLinks.openMiuiBatterySaver(context) },
                 )
-            },
-        )
+            }
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
         SectionHeader(stringResource(R.string.section_display))
@@ -402,7 +424,13 @@ private fun PermissionCard(
 }
 
 @Composable
-private fun InfoCard(title: String, description: String, actionLabel: String, onAction: () -> Unit) {
+private fun InfoCard(
+    title: String,
+    description: String,
+    actionLabel: String,
+    onAction: () -> Unit,
+    highlighted: Boolean = false,
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -428,7 +456,7 @@ private fun InfoCard(title: String, description: String, actionLabel: String, on
             TextButton(onClick = onAction) {
                 Text(
                     text = actionLabel,
-                    color = TextSecondary,
+                    color = if (highlighted) Color(0xFF64B5F6) else TextSecondary,
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,

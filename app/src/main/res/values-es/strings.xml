@@ -42,8 +42,13 @@
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">Inicio automático</string>
-    <string name="perm_autostart_desc">Permite que FocusLock se inicie automáticamente tras el reinicio. Requerido en algunos fabricantes.</string>
+    <string name="perm_autostart_desc">Permite que FocusLock se inicie automáticamente. Requerido en Xiaomi y otros dispositivos con gestión agresiva de batería.</string>
     <string name="perm_autostart_action">Abrir ajustes</string>
+
+    <!-- MIUI-specific battery saver (only shown on Xiaomi devices) -->
+    <string name="perm_miui_battery_title">Batería en segundo plano (MIUI)</string>
+    <string name="perm_miui_battery_desc">Abre el Centro de seguridad y configura la batería de FocusLock como "Sin restricciones" — el gestor de energía de MIUI puede detener el servicio aunque la optimización de batería ya esté desactivada.</string>
+    <string name="perm_miui_battery_action">Abrir ajustes</string>
 
     <!-- Themes -->
     <string name="theme_dynamic">Dinámico</string>
@@ -57,10 +62,16 @@
     <string name="battery_low">Batería baja</string>
     <string name="battery_disconnected">Desconectado</string>
 
+    <!-- Global enable/disable toggle -->
+    <string name="toggle_focuslock_title">FocusLock</string>
+    <string name="toggle_focuslock_desc_on">La superposición de pantalla de bloqueo está activa.</string>
+    <string name="toggle_focuslock_desc_off">En pausa. No se mostrará contenido en la pantalla de bloqueo.</string>
+
     <!-- Notification -->
     <string name="notification_channel_name">FocusLock Monitor</string>
     <string name="notification_overlay_channel_name">Overlay de pantalla de bloqueo</string>
     <string name="notification_service_active">FocusLock activo</string>
+    <string name="notification_service_paused">FocusLock en pausa</string>
 
     <!-- City CRUD feedback -->
     <string name="city_saved">Ciudad guardada</string>

@@ -57,10 +57,16 @@
     <string name="battery_low">कम बैटरी</string>
     <string name="battery_disconnected">अनप्लग्ड</string>
 
+    <!-- Global enable/disable toggle -->
+    <string name="toggle_focuslock_title">FocusLock</string>
+    <string name="toggle_focuslock_desc_on">लॉक स्क्रीन ओवरले सक्रिय है।</string>
+    <string name="toggle_focuslock_desc_off">रोका गया। लॉक स्क्रीन पर कोई सामग्री नहीं दिखाई जाएगी।</string>
+
     <!-- Notification -->
     <string name="notification_channel_name">FocusLock मॉनिटर</string>
     <string name="notification_overlay_channel_name">लॉक स्क्रीन ओवरले</string>
     <string name="notification_service_active">FocusLock सक्रिय</string>
+    <string name="notification_service_paused">FocusLock रोका गया</string>
 
     <!-- City CRUD feedback -->
     <string name="city_saved">शहर सहेजा</string>

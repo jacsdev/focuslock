@@ -57,10 +57,16 @@
     <string name="battery_low">Bateria fraca</string>
     <string name="battery_disconnected">Desconectado</string>
 
+    <!-- Global enable/disable toggle -->
+    <string name="toggle_focuslock_title">FocusLock</string>
+    <string name="toggle_focuslock_desc_on">A sobreposição da tela de bloqueio está ativa.</string>
+    <string name="toggle_focuslock_desc_off">Pausado. Nenhum conteúdo será exibido na tela de bloqueio.</string>
+
     <!-- Notification -->
     <string name="notification_channel_name">FocusLock Monitor</string>
     <string name="notification_overlay_channel_name">Sobreposição da tela de bloqueio</string>
     <string name="notification_service_active">FocusLock ativo</string>
+    <string name="notification_service_paused">FocusLock pausado</string>
 
     <!-- City CRUD feedback -->
     <string name="city_saved">Cidade salva</string>

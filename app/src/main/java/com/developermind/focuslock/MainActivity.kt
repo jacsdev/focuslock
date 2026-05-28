@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
                     composable("admin") {
                         AdminScreen(
                             uiState = uiState.value,
+                            onSetFocusLockEnabled = viewModel::setFocusLockEnabled,
                             onSetTheme = viewModel::setTheme,
                             onSetLanguage = viewModel::setLanguage,
                             onRefresh = viewModel::refreshPermissions,

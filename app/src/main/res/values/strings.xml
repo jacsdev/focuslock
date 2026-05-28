@@ -42,8 +42,13 @@
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">Autostart</string>
-    <string name="perm_autostart_desc">Allow FocusLock to start automatically after reboot. Required on some manufacturers.</string>
+    <string name="perm_autostart_desc">Allow FocusLock to start automatically. Required on Xiaomi and other devices with aggressive battery management.</string>
     <string name="perm_autostart_action">Open settings</string>
+
+    <!-- MIUI-specific battery saver (only shown on Xiaomi devices) -->
+    <string name="perm_miui_battery_title">Background Power (MIUI)</string>
+    <string name="perm_miui_battery_desc">Open Security Center and set FocusLock\'s battery to "No restrictions" — MIUI\'s own power manager can stop the service even when battery optimization is already disabled.</string>
+    <string name="perm_miui_battery_action">Open settings</string>
 
     <!-- Themes -->
     <string name="theme_dynamic">Dynamic</string>
@@ -57,10 +62,16 @@
     <string name="battery_low">Low battery</string>
     <string name="battery_disconnected">Unplugged</string>
 
+    <!-- Global enable/disable toggle -->
+    <string name="toggle_focuslock_title">FocusLock</string>
+    <string name="toggle_focuslock_desc_on">Lock screen overlay is active.</string>
+    <string name="toggle_focuslock_desc_off">Paused. No content will be shown on the lock screen.</string>
+
     <!-- Notification -->
     <string name="notification_channel_name">FocusLock Monitor</string>
     <string name="notification_overlay_channel_name">Lock Screen Overlay</string>
     <string name="notification_service_active">FocusLock active</string>
+    <string name="notification_service_paused">FocusLock paused</string>
 
     <!-- City CRUD feedback -->
     <string name="city_saved">City saved</string>

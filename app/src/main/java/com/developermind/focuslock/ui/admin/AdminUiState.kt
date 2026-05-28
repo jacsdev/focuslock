@@ -5,6 +5,7 @@ import com.developermind.focuslock.data.model.WeatherCondition
 import com.developermind.focuslock.util.LocaleManager
 
 data class AdminUiState(
+    val isFocusLockEnabled: Boolean = true,
     val isBatteryOptimizationIgnored: Boolean = false,
     val isAccessibilityServiceEnabled: Boolean = false,
     val selectedTheme: AppTheme = AppTheme.DYNAMIC,

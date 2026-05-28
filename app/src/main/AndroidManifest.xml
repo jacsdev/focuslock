@@ -6,6 +6,12 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <!-- Required for Open-Meteo weather API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required for the companion KeepAliveService that anchors the process at foreground priority -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- API 34+: foregroundServiceType="specialUse" requires this permission -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- API 33+: required to post the persistent KeepAlive notification -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".FocusLockApplication"
@@ -52,6 +58,15 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
+
+        <!-- Companion foreground service that keeps the process alive at foreground priority.
+             Prevents aggressive OEM killers (MIUI, One UI) from terminating the process
+             that hosts FocusLockAccessibilityService. Uses specialUse type (API 34+) to
+             avoid the 6h/day dataSync cap and the wrong-type restart failures. -->
+        <service
+            android:name=".service.KeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
 
     </application>
 
