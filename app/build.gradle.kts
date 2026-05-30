@@ -31,7 +31,7 @@ android {
         applicationId = "com.developermind.focuslock"
         minSdk = 26
         targetSdk = 36
-        versionCode = 14
+        versionCode = 16
         versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

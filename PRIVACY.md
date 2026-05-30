@@ -1,6 +1,6 @@
 # Privacy Policy — FocusLock
 
-**Effective date:** May 25, 2026
+**Effective date:** May 29, 2026
 **Developer:** jacsdev
 **Contact:** [jacsdev@gmail.com](mailto:jacsdev@gmail.com)
 
@@ -8,9 +8,9 @@
 
 # Overview
 
-FocusLock is an Android accessibility application designed to improve readability for people with low vision, older adults, and users who struggle with small or cluttered interfaces.
+FocusLock is an Android application that displays a customizable lock screen overlay showing time, date, battery level, and optional weather information. It is designed for users who want a cleaner, more readable lock screen — including people with low vision, older adults, and users who prefer a simplified interface.
 
-The app provides a simplified, high-contrast accessibility display with enlarged text showing essential information such as time, date, battery level, and optional weather information.
+The app uses Android's Accessibility Service exclusively as the technical mechanism to draw content above the system lock screen. This is the only official Android API that allows overlay content above the keyguard without requiring elevated system permissions.
 
 FocusLock is designed with privacy, transparency, and minimal data collection in mind.
 
@@ -160,6 +160,8 @@ Firebase Analytics is configured without:
 * cross-app tracking
 * behavioral profiling
 
+**Advertising ID:** FocusLock explicitly disables Google Advertising ID (GAID) collection via Firebase Analytics configuration. The `AD_ID` permission is removed from the app manifest. No advertising identifier is collected or used.
+
 FocusLock does not use analytics data for:
 
 * advertising
@@ -231,6 +233,25 @@ Donations do not unlock features or affect app functionality.
 
 ---
 
+# Foreground Service
+
+FocusLock runs a persistent foreground service (visible to the user as a low-priority notification labeled "FocusLock active" or "FocusLock paused").
+
+### Purpose
+
+The foreground service exists solely to prevent aggressive OEM battery management systems — present on Xiaomi, Samsung, Huawei, and other Android devices — from terminating the process that hosts the Accessibility Service.
+
+### What the foreground service does NOT do
+
+* Perform any network requests
+* Collect or transmit any user data
+* Access sensors, location, camera, or microphone
+* Monitor app usage or device activity
+
+The foreground service has no functionality beyond keeping the app process alive. Users can verify this by observing that the notification shows only a status label and contains no actionable content.
+
+---
+
 # Data Storage
 
 | Data                  | Storage Location     | Shared With          |
@@ -295,13 +316,15 @@ No SDKs are used for:
 
 # Permissions Explained
 
-| Permission                             | Purpose                                               |
-| -------------------------------------- | ----------------------------------------------------- |
-| `BIND_ACCESSIBILITY_SERVICE`           | Required for accessibility functionality              |
-| `FOREGROUND_SERVICE`                   | Maintain accessibility-related functionality          |
-| `INTERNET`                             | Retrieve optional weather information and diagnostics |
-| `ACCESS_NETWORK_STATE`                 | Check connectivity before weather requests            |
-| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Improve reliability on some devices                   |
+| Permission                             | Purpose                                                                                                   |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `BIND_ACCESSIBILITY_SERVICE`           | Required to draw the lock screen overlay via `TYPE_ACCESSIBILITY_OVERLAY`                                 |
+| `FOREGROUND_SERVICE`                   | Required to run the companion keepalive service                                                           |
+| `FOREGROUND_SERVICE_SPECIAL_USE`       | Required on Android 14+ for the companion service that prevents OEM battery managers from killing the app |
+| `POST_NOTIFICATIONS`                   | Required to show the mandatory persistent notification for the foreground service                         |
+| `INTERNET`                             | Retrieve optional weather information and send crash diagnostics                                          |
+| `ACCESS_NETWORK_STATE`                 | Check connectivity before weather requests                                                                |
+| `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` | Prevent Doze mode from terminating the accessibility service during extended screen-off periods           |
 
 FocusLock does not request:
 

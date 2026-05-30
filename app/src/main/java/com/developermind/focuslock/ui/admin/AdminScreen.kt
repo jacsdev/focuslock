@@ -92,6 +92,7 @@ fun AdminScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    var showAccessibilityDisclosure by remember { mutableStateOf(false) }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -141,9 +142,23 @@ fun AdminScreen(
                 else
                     stringResource(R.string.perm_accessibility_action_enable),
                 onAction = {
-                    context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    if (uiState.isAccessibilityServiceEnabled) {
+                        context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    } else {
+                        showAccessibilityDisclosure = true
+                    }
                 },
             )
+
+            if (showAccessibilityDisclosure) {
+                AccessibilityDisclosureDialog(
+                    onAccept = {
+                        showAccessibilityDisclosure = false
+                        context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                    },
+                    onDismiss = { showAccessibilityDisclosure = false },
+                )
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
 

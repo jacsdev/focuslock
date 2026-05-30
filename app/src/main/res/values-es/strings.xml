@@ -38,7 +38,7 @@
     <string name="perm_accessibility_status_restricted">Desactivado</string>
     <string name="perm_accessibility_action_enable">Activar</string>
     <string name="perm_accessibility_action_change">Cambiar</string>
-    <string name="accessibility_service_description">Muestra la hora y la batería en la pantalla de bloqueo para usuarios con baja visión.</string>
+    <string name="accessibility_service_description">FocusLock muestra hora, fecha, nivel de batería y temperatura opcional como overlay en la pantalla de bloqueo. Este servicio no lee contenido de aplicaciones, no monitorea el uso de apps ni recopila datos personales. Usa el framework de Accesibilidad únicamente para dibujar sobre la pantalla de bloqueo de Android.</string>
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">Inicio automático</string>
@@ -88,6 +88,12 @@
     <string name="lang_spanish">Español</string>
     <string name="lang_portuguese_br">Portugués (Brasil)</string>
     <string name="lang_hindi">Hindi</string>
+
+    <!-- Accessibility disclosure dialog -->
+    <string name="disclosure_title">Cómo FocusLock usa la Accesibilidad</string>
+    <string name="disclosure_body">FocusLock usa el Servicio de Accesibilidad de Android para mostrar un overlay personalizable en tu pantalla de bloqueo, con hora, fecha, nivel de batería e información meteorológica opcional.\n\nA qué accede FocusLock:\n• La capacidad de dibujar un overlay en pantalla completa sobre la pantalla de bloqueo\n• Eventos de encendido/apagado de pantalla para mostrar y ocultar el overlay\n\nA qué NO accede FocusLock:\n• Contenido de apps o ventanas\n• Tu historial de uso ni qué apps abrís\n• Datos personales, mensajes o notificaciones\n• Entrada de usuario o gestos\n\nEste permiso es necesario porque Android solo permite dibujar sobre la pantalla de bloqueo a través del framework de Accesibilidad. No se recopilan, almacenan ni comparten datos de accesibilidad.\n\nPodés desactivar FocusLock en cualquier momento en Ajustes › Accesibilidad.</string>
+    <string name="disclosure_accept">Entendido — Activar FocusLock</string>
+    <string name="disclosure_cancel">Cancelar</string>
 
     <!-- Donation feature -->
     <string name="section_support">Apoyo</string>

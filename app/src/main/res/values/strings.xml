@@ -38,7 +38,7 @@
     <string name="perm_accessibility_status_restricted">Disabled</string>
     <string name="perm_accessibility_action_enable">Enable</string>
     <string name="perm_accessibility_action_change">Change</string>
-    <string name="accessibility_service_description">Displays time and battery on the lock screen for users with low vision.</string>
+    <string name="accessibility_service_description">FocusLock displays time, date, battery level, and optional weather temperature as a fullscreen overlay on the lock screen. This service does not read app content, monitor app usage, or collect any personal data. It uses the Accessibility framework solely to draw above the Android lock screen — the only official mechanism for this without elevated system permissions.</string>
 
     <!-- Autostart permission -->
     <string name="perm_autostart_title">Autostart</string>
@@ -88,6 +88,12 @@
     <string name="lang_spanish">Spanish</string>
     <string name="lang_portuguese_br">Portuguese (Brazil)</string>
     <string name="lang_hindi">Hindi</string>
+
+    <!-- Accessibility disclosure dialog -->
+    <string name="disclosure_title">How FocusLock uses Accessibility</string>
+    <string name="disclosure_body">FocusLock uses Android\'s Accessibility Service to display a customizable overlay on your lock screen, showing time, date, battery level, and optional weather information.\n\nWhat FocusLock accesses:\n• The ability to draw a fullscreen overlay above the lock screen\n• Screen on/off events to show and hide the overlay\n\nWhat FocusLock does NOT access:\n• App content or window contents\n• Your usage history or which apps you open\n• Personal data, messages, or notifications\n• User input or gestures\n\nThis permission is required because Android only allows drawing above the lock screen through the Accessibility framework. No accessibility data is collected, stored, or shared.\n\nYou can disable FocusLock at any time in Settings › Accessibility.</string>
+    <string name="disclosure_accept">I understand — Enable FocusLock</string>
+    <string name="disclosure_cancel">Cancel</string>
 
     <!-- Donation feature -->
     <string name="section_support">Support</string>
