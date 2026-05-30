@@ -28,15 +28,14 @@ Optional one-time donations help support maintenance and future accessibility im
 
 # Core Accessibility Functionality
 
-The Android Accessibility Service is the core functionality of FocusLock.
+The Android Accessibility Service is the core technical mechanism FocusLock uses to draw a full-screen overlay above the system lock screen.
 
-Without the Accessibility Service, the app cannot provide enlarged high-contrast visual information for users with low vision.
+Without the Accessibility Service, the app cannot render its overlay using `TYPE_ACCESSIBILITY_OVERLAY`, which is the only official Android API that allows content to appear above the keyguard without requiring elevated system permissions.
 
 FocusLock uses Android Accessibility APIs exclusively to:
 
-* display enlarged text
-* improve readability
-* render accessibility-focused visual information
+* render a full-screen overlay on the lock screen displaying time, date, battery level, and optional weather information
+* respond to screen-on and screen-off system events to attach and detach the overlay
 
 The app does not use accessibility features for monitoring, automation, surveillance, advertising, or data collection.
 
@@ -44,7 +43,7 @@ The app does not use accessibility features for monitoring, automation, surveill
 
 # Accessibility Data Handling
 
-FocusLock uses Android Accessibility APIs only to display enlarged visual information for low-vision users.
+FocusLock uses Android Accessibility APIs only to draw a lock screen overlay. No accessibility events from other apps are read or processed.
 
 FocusLock does NOT:
 
