@@ -181,16 +181,16 @@ fun AdminScreen(
                 onAction = { OemDeepLinks.openAutostart(context) },
             )
 
-            if (OemDeepLinks.isMiui) {
-                Spacer(modifier = Modifier.height(10.dp))
-                InfoCard(
-                    title = stringResource(R.string.perm_miui_battery_title),
-                    description = stringResource(R.string.perm_miui_battery_desc),
-                    actionLabel = stringResource(R.string.perm_miui_battery_action),
-                    highlighted = true,
-                    onAction = { OemDeepLinks.openMiuiBatterySaver(context) },
-                )
-            }
+//            if (OemDeepLinks.isMiui) {
+//                Spacer(modifier = Modifier.height(10.dp))
+//                InfoCard(
+//                    title = stringResource(R.string.perm_miui_battery_title),
+//                    description = stringResource(R.string.perm_miui_battery_desc),
+//                    actionLabel = stringResource(R.string.perm_miui_battery_action),
+//                    highlighted = true,
+//                    onAction = { OemDeepLinks.openMiuiBatterySaver(context) },
+//                )
+//            }
         }
 
         Spacer(modifier = Modifier.height(32.dp))
