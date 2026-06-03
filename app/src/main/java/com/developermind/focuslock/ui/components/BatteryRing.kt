@@ -36,15 +36,19 @@ import com.developermind.focuslock.data.model.BatteryState
 
 private val RingTrack = Color(0xFF2A2A2A)
 
-private fun ringColor(theme: AppTheme, percentage: Int): Color = when (theme) {
-    AppTheme.DYNAMIC -> when {
-        percentage > 50 -> Color(0xFF4CAF50)
-        percentage > 20 -> Color(0xFFFF9800)
-        else -> Color(0xFFF44336)
+private val CriticalRed = Color(0xFFF44336)
+
+private fun ringColor(theme: AppTheme, battery: BatteryState): Color = when {
+    battery.isLow -> CriticalRed
+    else -> when (theme) {
+        AppTheme.DYNAMIC -> when {
+            battery.percentage > 50 -> Color(0xFF4CAF50)
+            else -> Color(0xFFFF9800)
+        }
+        AppTheme.OCEAN -> Color(0xFF2196F3)
+        AppTheme.AURORA -> Color(0xFFAB47BC)
+        AppTheme.ARCTIC -> Color(0xFFE0E0E0)
     }
-    AppTheme.OCEAN -> Color(0xFF2196F3)
-    AppTheme.AURORA -> Color(0xFFAB47BC)
-    AppTheme.ARCTIC -> Color(0xFFE0E0E0)
 }
 
 @Composable
@@ -62,7 +66,21 @@ fun BatteryRing(
         label = "batteryProgress",
     )
 
-    val color = ringColor(theme, battery.percentage)
+    val baseColor = ringColor(theme, battery)
+
+    val lowBatteryPulse = rememberInfiniteTransition(label = "lowBatteryPulse")
+    val lowBatteryAlpha by lowBatteryPulse.animateFloat(
+        initialValue = 0.45f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 700, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "lowBatteryAlpha",
+    )
+    val pulseAlpha = if (battery.isLow) lowBatteryAlpha else 1f
+
+    val color = baseColor.copy(alpha = pulseAlpha)
 
     Box(
         contentAlignment = Alignment.Center,
@@ -85,7 +103,8 @@ fun BatteryRing(
             )
 
             if (animatedProgress > 0f) {
-                drawCircle(color = color.copy(alpha = 0.12f), radius = size.minDimension / 2f)
+                val glowAlpha = if (battery.isLow) 0.22f * pulseAlpha else 0.12f
+                drawCircle(color = baseColor.copy(alpha = glowAlpha), radius = size.minDimension / 2f)
                 drawArc(
                     color = color,
                     startAngle = -90f,
@@ -103,7 +122,7 @@ fun BatteryRing(
                 text = "${battery.percentage}%",
                 fontSize = 64.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.White,
+                color = if (battery.isLow) CriticalRed else Color.White,
             )
             Spacer(modifier = Modifier.height(4.dp))
             ChargingLabel(battery = battery)

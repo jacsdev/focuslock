@@ -15,4 +15,5 @@ data class OverlayUiState(
     val temperature: Float? = null,
     val temperatureIsStale: Boolean = false,
     val weatherCondition: WeatherCondition? = null,
+    val navigationBarInsetPx: Int = 0,
 )

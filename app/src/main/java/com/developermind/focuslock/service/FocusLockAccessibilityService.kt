@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.PixelFormat
+import android.view.WindowInsets
 import android.graphics.Rect
 import android.os.Build
 import android.provider.Settings
@@ -142,10 +143,7 @@ class FocusLockAccessibilityService : AccessibilityService() {
             setViewTreeSavedStateRegistryOwner(lifecycleOwner)
             setContent {
                 FocusLockTheme {
-                    OverlayScreen(
-                        uiState = uiState.value,
-                        onDismiss = ::safeRemoveOverlay,
-                    )
+                    OverlayScreen(uiState = uiState.value, onDismiss = ::safeRemoveOverlay)
                 }
             }
         }
@@ -183,6 +181,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
             x = 0
             y = 0
         }
+
+        uiState.value = uiState.value.copy(navigationBarInsetPx = navigationBarInset())
 
         try {
             windowManager.addView(overlayView, params)
@@ -301,6 +301,18 @@ class FocusLockAccessibilityService : AccessibilityService() {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private fun navigationBarInset(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            windowManager.currentWindowMetrics
+                .windowInsets
+                .getInsets(WindowInsets.Type.navigationBars())
+                .bottom
+        } else {
+            val resId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+            if (resId > 0) resources.getDimensionPixelSize(resId) else 0
+        }
+    }
 
     companion object {
         private const val TAG = "FocusLockA11y"

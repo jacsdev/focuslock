@@ -6,11 +6,13 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.developermind.focuslock.data.model.BatteryState
@@ -19,16 +21,16 @@ import com.developermind.focuslock.ui.components.TemperatureDisplay
 import com.developermind.focuslock.ui.components.TimeDisplay
 
 @Composable
-fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit) {
+fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
             .clickable(
-                indication = null,
                 interactionSource = remember { MutableInteractionSource() },
-                onClick = onDismiss,
-            ),
+                indication = null,
+            ) { onDismiss() }
+            .padding(bottom = with(LocalDensity.current) { uiState.navigationBarInsetPx.toDp() }),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(48.dp, Alignment.CenterVertically),
     ) {
@@ -56,6 +58,5 @@ private fun OverlayScreenPreview() {
             date = "viernes, 25 de mayo",
             battery = BatteryState(percentage = 72, isCharging = false),
         ),
-        onDismiss = {},
     )
 }
