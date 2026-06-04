@@ -13,7 +13,10 @@ object BatteryMonitor {
             null,
             IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         ) ?: return BatteryState()
+        return fromIntent(intent)
+    }
 
+    fun fromIntent(intent: Intent): BatteryState {
         val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
         val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
         val percentage = if (level >= 0 && scale > 0) (level * 100 / scale) else 0

@@ -5,8 +5,6 @@ import com.developermind.focuslock.data.model.BatteryState
 import com.developermind.focuslock.data.model.WeatherCondition
 
 data class OverlayUiState(
-    val time: String = "",
-    val date: String = "",
     val battery: BatteryState = BatteryState(),
     val theme: AppTheme = AppTheme.DYNAMIC,
     val showBattery: Boolean = true,

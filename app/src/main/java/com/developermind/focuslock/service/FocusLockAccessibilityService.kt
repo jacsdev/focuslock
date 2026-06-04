@@ -55,6 +55,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var timeJob: Job? = null
     private val uiState = mutableStateOf(OverlayUiState())
+    private val time = mutableStateOf("")
+    private val date = mutableStateOf("")
 
     private val batteryRepository by lazy { BatteryRepository(this) }
     private val themeRepository by lazy { ThemeRepository(this) }
@@ -143,7 +145,12 @@ class FocusLockAccessibilityService : AccessibilityService() {
             setViewTreeSavedStateRegistryOwner(lifecycleOwner)
             setContent {
                 FocusLockTheme {
-                    OverlayScreen(uiState = uiState.value, onDismiss = ::safeRemoveOverlay)
+                    OverlayScreen(
+                        uiState = uiState.value,
+                        time = time.value,
+                        date = date.value,
+                        onDismiss = ::safeRemoveOverlay,
+                    )
                 }
             }
         }
@@ -227,10 +234,8 @@ class FocusLockAccessibilityService : AccessibilityService() {
         timeJob?.cancel()
         timeJob = serviceScope.launch {
             while (true) {
-                uiState.value = uiState.value.copy(
-                    time = currentTime(),
-                    date = currentDate(),
-                )
+                time.value = currentTime()
+                date.value = currentDate()
                 delay(1_000)
             }
         }

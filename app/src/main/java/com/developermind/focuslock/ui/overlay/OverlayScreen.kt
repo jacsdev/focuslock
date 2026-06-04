@@ -21,7 +21,7 @@ import com.developermind.focuslock.ui.components.TemperatureDisplay
 import com.developermind.focuslock.ui.components.TimeDisplay
 
 @Composable
-fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit = {}) {
+fun OverlayScreen(uiState: OverlayUiState, time: String, date: String, onDismiss: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,7 +34,7 @@ fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit = {}) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(48.dp, Alignment.CenterVertically),
     ) {
-        TimeDisplay(time = uiState.time, date = uiState.date)
+        TimeDisplay(time = time, date = date)
         if (uiState.showBattery) {
             BatteryRing(battery = uiState.battery, theme = uiState.theme)
         }
@@ -54,9 +54,9 @@ fun OverlayScreen(uiState: OverlayUiState, onDismiss: () -> Unit = {}) {
 private fun OverlayScreenPreview() {
     OverlayScreen(
         uiState = OverlayUiState(
-            time = "22:45",
-            date = "viernes, 25 de mayo",
             battery = BatteryState(percentage = 72, isCharging = false),
         ),
+        time = "22:45",
+        date = "viernes, 25 de mayo",
     )
 }

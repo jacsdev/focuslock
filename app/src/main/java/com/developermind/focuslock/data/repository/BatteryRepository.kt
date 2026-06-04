@@ -9,6 +9,7 @@ import com.developermind.focuslock.util.BatteryMonitor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 
 class BatteryRepository(private val context: Context) {
 
@@ -17,12 +18,12 @@ class BatteryRepository(private val context: Context) {
 
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(ctx: Context, intent: Intent) {
-                trySend(BatteryMonitor.getCurrentState(ctx))
+                trySend(BatteryMonitor.fromIntent(intent))
             }
         }
 
         context.registerReceiver(receiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
 
         awaitClose { context.unregisterReceiver(receiver) }
-    }
+    }.distinctUntilChanged()
 }

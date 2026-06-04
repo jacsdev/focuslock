@@ -73,10 +73,10 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
 
         _uiState.update { it.copy(selectedLanguageTag = localeManager.getSavedLanguageTag()) }
 
-        // Reschedule weather sync on startup if city already exists
+        // Ensure periodic sync is registered on startup — uses KEEP so it never resets a running timer
         viewModelScope.launch {
             val prefs = preferencesRepository.observePreferences().first()
-            if (prefs.weatherCity.isNotBlank()) scheduleWeatherSync(prefs.weatherCity)
+            if (prefs.weatherCity.isNotBlank()) ensurePeriodicWeatherSync(prefs.weatherCity)
         }
 
         refreshPermissions()
@@ -149,9 +149,7 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun scheduleWeatherSync(city: String) {
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
+        val constraints = weatherConstraints()
         val inputData = workDataOf(WeatherSyncWorker.KEY_CITY to city)
 
         workManager.enqueueUniqueWork(
@@ -163,14 +161,24 @@ class AdminViewModel(application: Application) : AndroidViewModel(application) {
                 .addTag(WeatherSyncWorker.WORK_TAG)
                 .build(),
         )
+        ensurePeriodicWeatherSync(city)
+    }
+
+    private fun ensurePeriodicWeatherSync(city: String) {
+        val inputData = workDataOf(WeatherSyncWorker.KEY_CITY to city)
         workManager.enqueueUniquePeriodicWork(
             WeatherSyncWorker.WORK_PERIODIC_NAME,
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.KEEP,
             PeriodicWorkRequestBuilder<WeatherSyncWorker>(30, TimeUnit.MINUTES)
                 .setInputData(inputData)
-                .setConstraints(constraints)
+                .setConstraints(weatherConstraints())
                 .addTag(WeatherSyncWorker.WORK_TAG)
                 .build(),
         )
     }
+
+    private fun weatherConstraints() = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .setRequiresBatteryNotLow(true)
+        .build()
 }

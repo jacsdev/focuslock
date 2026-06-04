@@ -67,18 +67,7 @@ fun BatteryRing(
     )
 
     val baseColor = ringColor(theme, battery)
-
-    val lowBatteryPulse = rememberInfiniteTransition(label = "lowBatteryPulse")
-    val lowBatteryAlpha by lowBatteryPulse.animateFloat(
-        initialValue = 0.45f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 700, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse,
-        ),
-        label = "lowBatteryAlpha",
-    )
-    val pulseAlpha = if (battery.isLow) lowBatteryAlpha else 1f
+    val pulseAlpha = if (battery.isLow) lowBatteryPulseAlpha() else 1f
 
     val color = baseColor.copy(alpha = pulseAlpha)
 
@@ -128,6 +117,21 @@ fun BatteryRing(
             ChargingLabel(battery = battery)
         }
     }
+}
+
+@Composable
+private fun lowBatteryPulseAlpha(): Float {
+    val transition = rememberInfiniteTransition(label = "lowBatteryPulse")
+    val alpha by transition.animateFloat(
+        initialValue = 0.45f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 700, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse,
+        ),
+        label = "lowBatteryAlpha",
+    )
+    return alpha
 }
 
 @Composable
